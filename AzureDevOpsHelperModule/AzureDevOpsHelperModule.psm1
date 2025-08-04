@@ -1,24 +1,4 @@
-#region Script Header
-#	Thought for the day:
-#	NAME: AzureDevOpsHelperModule.psm1
-#	AUTHOR: Lars Panzerbjørn
-#	CONTACT:  / GitHub: Panzerbjrn / Twitter: lpetersson
-#	DATE: 2025.07.27
-#	VERSION: 0.1 - 2025.07.27 - Module Created with Create-NewModuleStructure by Lars Panzerbj�rn
-#
-#	SYNOPSIS:
-#
-#
-#	DESCRIPTION:
-#	This module will help with certain operations in your Azure DevOps organisation. Especially batch creating new items, or scheduling repeated tasks, pipelines etc. Feel free to get in touch via GitHub if there is anything you would like to see added.
-#
-#	REQUIREMENTS:
-#
-#endregion Script Header
-
-#Requires -Version 4.0
-
-[CmdletBinding(PositionalBinding=$false)]
+﻿[CmdletBinding()]
 param()
 
 Write-Verbose $PSScriptRoot
@@ -39,3 +19,5 @@ ForEach ($Import in @($Functions + $Helpers)){
 
 Export-ModuleMember -Function $Functions.Basename
 
+Set-Alias -Name Run-AzDOPipeline -Value Start-AzDOPipeline
+Export-ModuleMember -Function Start-AzDOPipeline -Alias Run-AzDOPipeline

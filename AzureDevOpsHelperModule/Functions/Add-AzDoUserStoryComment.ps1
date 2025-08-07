@@ -77,7 +77,7 @@
 		})
 		$Body = ConvertTo-Json $Body
 		$Body
-		$Result = Invoke-RestMethod -Uri $Uri -Method PATCH -Headers $Header -ContentType $JsonContentType -Body $Body
+		$Result = Invoke-RestMethod -Uri $Uri -Method PATCH -Headers $Header -ContentType "application/json-patch+json" -Body $Body
 	}
 	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"

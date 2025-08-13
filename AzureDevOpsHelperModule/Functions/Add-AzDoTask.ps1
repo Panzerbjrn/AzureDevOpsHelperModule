@@ -101,7 +101,7 @@
 		$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
 
 		IF (($ParentItemID) -and ($Result.id)){
-			Connect-AzDoItems -Project $Project -ParentItemID $ParentItemID -ChildItemID $Result.id -Verbose
+			Connect-AzDoItems -Project $Project -ParentItemID $ParentItemID -ChildItemID $Result.id | Out-Null
 		}
 
 	}

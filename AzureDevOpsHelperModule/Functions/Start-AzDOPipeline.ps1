@@ -63,7 +63,7 @@ Function Start-AzDOPipeline{
         }
 
         IF($BranchName) {
-            $RunParameters.resources.repositories.self["refName"] = "refs/heads/$BranchName"
+            $RunParameters.resources.repositories.self["refName"] = "$BranchName"
         }
 		$JsonBody.runParameters = $RunParameters
 

@@ -40,7 +40,10 @@ Function Start-AzDOPipeline{
         [string]$BranchName,
 
 		[Parameter()]
-		[string[]]$StagesToSkip
+		[string[]]$StagesToSkip,
+
+		[Parameter()]
+        [hashtable]$TemplateParameters
 	)
 
 	BEGIN{
@@ -72,6 +75,10 @@ Function Start-AzDOPipeline{
 
 		IF($StagesToSkip) {
 			$JsonBody.stagesToSkip = $StagesToSkip
+		}
+
+		IF($TemplateParameters) {
+			$JsonBody.templateParameters = $TemplateParameters
 		}
 
         #$JsonBody = $JsonBody | ConvertTo-Json

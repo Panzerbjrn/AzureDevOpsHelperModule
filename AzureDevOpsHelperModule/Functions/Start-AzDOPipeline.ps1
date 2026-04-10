@@ -58,16 +58,17 @@ Function Start-AzDOPipeline{
 		$JsonBody = @{}
 
         $RunParameters = @{
-            resources = @{
-                repositories = @{
-                    self = @{}
-                }
-            }
+			repositories = @{
+				self = @{
+					refName = ""
+				}
+			}
         }
 
         IF($BranchName) {
             #$RunParameters.resources.repositories.self["refName"] = "$BranchName"
-            $RunParameters.resources.repositories.self.refName = $BranchName
+            #$RunParameters.resources.repositories.self.refName = $BranchName
+            $RunParameters.repositories.self.refName = $BranchName
         }
 
 		#$JsonBody.runParameters = $RunParameters  #This is the correct way to do it, but the API expects the parameters to be in the "resources" property, not in a "runParameters" property.

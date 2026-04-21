@@ -49,6 +49,7 @@ Function Start-AzDOPipeline{
 	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
         $Uri = $BaseUri + "$Project/_apis/pipelines/$PipelineId/runs?api-version=7.0"
+		Write-verbose "URI: $Uri"
 	}
 
 	PROCESS{
@@ -84,6 +85,7 @@ Function Start-AzDOPipeline{
 
         #$JsonBody = $JsonBody | ConvertTo-Json
         $JsonBody = $JsonBody | ConvertTo-Json -Depth 10
+		Write-Verbose "JsonBody: $JsonBody"
 
 		$Run = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType $JsonContentType -Body $JsonBody
 	}

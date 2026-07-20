@@ -47,6 +47,8 @@
 
 		[Parameter()][string]$Board,
 
+		[Parameter()][string]$Iteration,
+
 		[Parameter()][string]$AssignedTo,
 
 		[Parameter()][string]$Description,
@@ -84,6 +86,15 @@
 				op = "add"
 				path = '/fields/System.AreaPath'
 				value = $BoardValue
+			}
+		)
+
+		IF ($Iteration){{$IterationValue = $Iteration}}
+		ELSE {$IterationValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.IterationPath'}
+		$Body += @([pscustomobject]@{
+				op = "add"
+				path = '/fields/System.IterationPath'
+				value = $IterationValue
 			}
 		)
 

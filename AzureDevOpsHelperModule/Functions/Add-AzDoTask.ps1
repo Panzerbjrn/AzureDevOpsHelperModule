@@ -87,14 +87,21 @@
 			}
 		)
 
-		IF ($AssignedTo){$AssignedToValue = $AssignedTo}
-		#ELSE {$AssignedToValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.Assignedto'.displayName}
 		$Body += @([pscustomobject]@{
-				op = "add"
-				path = '/fields/System.AssignedTo'
-				value = $AssignedToValue
+			op = "add"
+			path = '/fields/System.AssignedTo'
+			value = $AssignedTo
 			}
 		)
+
+		# IF ($AssignedTo){$AssignedToValue = $AssignedTo}
+		# #ELSE {$AssignedToValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.Assignedto'.displayName}
+		# $Body += @([pscustomobject]@{
+		# 		op = "add"
+		# 		path = '/fields/System.AssignedTo'
+		# 		value = $AssignedToValue
+		# 	}
+		# )
 
 		$Body = ConvertTo-Json $Body
 		$Body

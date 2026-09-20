@@ -46,6 +46,9 @@ Function Add-AzDoUserStoryWorkItem{
 	.PARAMETER OriginalEstimate
 		How much time is the task expected to take
 
+	.PARAMETER ExtraParameters
+		Additional parameters to include when creating the work item. This should be a hashtable where the key is the field reference name and the value is the value to set.
+
 	.PARAMETER Tags
 		Tags assigned to the work item. These are separated by commas, i.e. "Tag1","Tag2"
 
@@ -53,7 +56,7 @@ Function Add-AzDoUserStoryWorkItem{
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the logfile.
+		This will output the created work item details.
 
 	.LINK
 		https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/work-items/create
@@ -211,7 +214,7 @@ Function Add-AzDoUserStoryWorkItem{
 			-SkipHttpErrorCheck
 
 		IF ($StatusCode -ge 400) {
-			# This should output 
+			# This should output exactly *what* ADO is expecting but not getting.
 			IF ($Response.customProperties.RuleValidationErrors) {
 				ForEach ($Rule in $Response.customProperties.RuleValidationErrors) {
 					#Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"

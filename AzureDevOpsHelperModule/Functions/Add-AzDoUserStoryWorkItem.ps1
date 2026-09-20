@@ -200,41 +200,42 @@ Function Add-AzDoUserStoryWorkItem{
 		$Body = ConvertTo-Json $Body
 		Write-Verbose -Message $Body
 		Write-Verbose -Message "$Uri"
-	TRY{
-		$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header `
-			-ContentType "application/json-patch+json" -Body $Body
-	}
-	CATCH{
-		$Raw = $null
-		$Obj = $null
-
-		IF ($_.Exception.Response) {
-			$Stream = $_.Exception.Response.GetResponseStream()
-			$Reader = New-Object System.IO.StreamReader($Stream)
-			$Raw    = $Reader.ReadToEnd()
-			$Reader.Close()
-			$Stream.Close()
+		TRY{
+			$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header `
+				-ContentType "application/json-patch+json" -Body $Body
 		}
+		CATCH{
+			$Raw = $null
+			$Obj = $null
 
-		IF ($Raw) {
-			TRY {
-				$Obj = $Raw | ConvertFrom-Json
-			}
-			CATCH {
-				Write-Error $Raw
-				Return
+			IF ($_.Exception.Response) {
+				$Stream = $_.Exception.Response.GetResponseStream()
+				$Reader = New-Object System.IO.StreamReader($Stream)
+				$Raw    = $Reader.ReadToEnd()
+				$Reader.Close()
+				$Stream.Close()
 			}
 
-			IF ($Obj.customProperties.RuleValidationErrors) {
-				ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
-					Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+			IF ($Raw) {
+				TRY {
+					$Obj = $Raw | ConvertFrom-Json
 				}
-			}
+				CATCH {
+					Write-Error $Raw
+					Return
+				}
 
-			Write-Error ($Obj | ConvertTo-Json -Depth 10)
-		}
-		ELSE {
-			Write-Error $_
+				IF ($Obj.customProperties.RuleValidationErrors) {
+					ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
+						Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+					}
+				}
+
+				Write-Error ($Obj | ConvertTo-Json -Depth 10)
+			}
+			ELSE {
+				Write-Error $_
+			}
 		}
 	}
 }

@@ -200,9 +200,10 @@ Function Add-AzDoUserStoryWorkItem{
 		$Body = ConvertTo-Json $Body
 		Write-Verbose -Message $Body
 		Write-Verbose -Message "$Uri"
+
 		TRY{
-			$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header `
-				-ContentType "application/json-patch+json" -Body $Body
+			$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
+			Return $Result
 		}
 		CATCH{
 			$Raw = $null
@@ -219,17 +220,18 @@ Function Add-AzDoUserStoryWorkItem{
 			IF ($Raw) {
 				TRY {
 					$Obj = $Raw | ConvertFrom-Json
+					Return $Obj
 				}
 				CATCH {
 					Write-Error $Raw
 					Return
 				}
 
-				IF ($Obj.customProperties.RuleValidationErrors) {
-					ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
-						Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
-					}
-				}
+				# IF ($Obj.customProperties.RuleValidationErrors) {
+				# 	ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
+				# 		Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+				# 	}
+				# }
 
 				Write-Error ($Obj | ConvertTo-Json -Depth 10)
 			}

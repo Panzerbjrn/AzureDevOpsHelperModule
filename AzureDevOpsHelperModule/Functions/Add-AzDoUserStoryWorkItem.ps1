@@ -92,6 +92,9 @@
 
 		[Parameter()][int]$OriginalEstimate,
 
+		[Parameter()]
+		[hashtable[]]$ExtraParameters,
+
 		[Parameter()][string[]]$Tags
 	)
 
@@ -177,6 +180,20 @@
 				}
 			)
 		}
+
+		IF ($ExtraParameters){
+			ForEach ($KV in $ExtraParameters){
+				ForEach ($Key in $KV.Keys){
+					$Body += @([pscustomobject]@{
+							op    = "add"
+							path  = "/fields/$Key"
+							value = $KV[$Key]
+						}
+					)
+				}
+			}
+		}
+
 		$Body = ConvertTo-Json $Body
 		Write-Verbose -Message $Body
 		Write-Verbose -Message "$Uri"
@@ -185,6 +202,7 @@
 		}
 		CATCH{
 			$Raw = $null
+			$Obj = $null
 			IF ($_.Exception.Response) {
 				$Stream = $_.Exception.Response.GetResponseStream()
 				$Reader = New-Object System.IO.StreamReader($Stream)
@@ -199,6 +217,9 @@
 				}
 				CATCH {
 					Write-Error $Raw
+				}
+				ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
+					Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
 				}
 			}
 			ELSE {

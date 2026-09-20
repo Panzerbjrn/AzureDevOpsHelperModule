@@ -40,9 +40,9 @@ Function Remove-AzDoPipeline {
 
 	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
-        Try {
+        TRY{
             $Response = Invoke-RestMethod -Uri $Uri -Method Delete -Headers $Header
-        } Catch {
+        } CATCH{
             Write-Error "Failed to delete pipeline. Error: $_"
         }
     }

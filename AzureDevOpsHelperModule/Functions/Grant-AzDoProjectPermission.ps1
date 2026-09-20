@@ -67,10 +67,10 @@ Function Grant-AzDoProjectPermission {
 		# Get project details (to obtain id)
 		$projUri = "$BaseUri$Project/_apis/projects/$Project`?api-version=7.0"
 		Write-Verbose "Getting project details from $projUri"
-		TRY {
+		TRY{
 			$proj = Invoke-RestMethod -Uri $projUri -Method GET -Headers $Header -ErrorAction Stop
 		}
-		CATCH {
+		CATCH{
 			Throw "Failed to get project $Project - $_"
 		}
 		$projectId = $proj.id
@@ -79,10 +79,10 @@ Function Grant-AzDoProjectPermission {
 		# Attempt 1: list graph groups and try to match common project group names.
 		$groupsUri = "https://vssps.dev.azure.com/$Org/_apis/graph/groups?api-version=7.0-preview.1"
 		Write-Verbose "Retrieving graph groups from $groupsUri"
-		TRY {
+		TRY{
 			$allGroups = Invoke-RestMethod -Uri $groupsUri -Method GET -Headers $Header -ErrorAction Stop
 		}
-		CATCH {
+		CATCH{
 			Throw "Failed retrieving graph groups - $_"
 		}
 
@@ -111,10 +111,10 @@ Function Grant-AzDoProjectPermission {
 			# fallback: try project teams API (teams are also containers for membership in many scenarios)
 			$teamsUri = "$BaseUri$Project/_apis/teams?api-version=7.0"
 			Write-Verbose "Getting project teams: $teamsUri"
-			TRY {
+			TRY{
 				$teams = Invoke-RestMethod -Uri $teamsUri -Method GET -Headers $Header -ErrorAction Stop
 			}
-			CATCH {
+			CATCH{
 				$teams = $null
 			}
 			$teamMatch = $null
@@ -139,10 +139,10 @@ Function Grant-AzDoProjectPermission {
 		# Find the user principal (graph user descriptor)
 		Write-Verbose "Searching for user principal matching '$User'"
 		$usersUri = "https://vssps.dev.azure.com/$Org/_apis/graph/users?api-version=7.0-preview.1"
-		TRY {
+		TRY{
 			$allUsers = Invoke-RestMethod -Uri $usersUri -Method GET -Headers $Header -ErrorAction Stop
 		}
-		CATCH {
+		CATCH{
 			Throw "Failed retrieving graph users - $_"
 		}
 		$userMatch = $allUsers.value | Where-Object {
@@ -167,13 +167,13 @@ Function Grant-AzDoProjectPermission {
 		}
 
 		Write-Verbose "Creating membership..."
-		TRY {
+		TRY{
 			$res = Invoke-RestMethod -Uri $membershipUri -Method PUT -Headers $Header -ErrorAction Stop -ContentType 'application/json' -Body $null
 			$MatchedGroupName = IF ($match) { $match.displayName } ELSE { $Group }
 			Write-Output "User '$($userMatch.displayName)' added to group '$MatchedGroupName'."
 			return $res
 		}
-		CATCH {
+		CATCH{
 			Throw "Failed to add membership - $_"
 		}
 	}

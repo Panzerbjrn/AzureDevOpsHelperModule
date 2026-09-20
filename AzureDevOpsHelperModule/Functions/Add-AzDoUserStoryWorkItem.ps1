@@ -218,11 +218,11 @@ Function Add-AzDoUserStoryWorkItem{
 			}
 
 			IF ($Raw) {
-				TRY {
+				TRY{
 					$Obj = $Raw | ConvertFrom-Json
 					Return $Obj
 				}
-				CATCH {
+				CATCH{
 					Write-Error $Raw
 					Return
 				}

@@ -110,7 +110,7 @@ Function Add-AzDoProjectPermission{
 		$GroupsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups?scopeDescriptor=scp.$ProjectId&api-version=7.0-preview.1"
 		Write-Verbose "Groups URI: $GroupsUri"
 
-		TRY {
+		TRY{
 			$Groups = Invoke-RestMethod -Uri $GroupsUri -Method GET -Headers $Header
 			$TargetGroup = $Groups.value | Where-Object {$_.displayName -eq $TargetGroupName}
 
@@ -121,7 +121,7 @@ Function Add-AzDoProjectPermission{
 			Write-Verbose "Found target group: $($TargetGroup.displayName)"
 			$GroupDescriptor = $TargetGroup.descriptor
 		}
-		CATCH {
+		CATCH{
 			Write-Error "Failed to get project groups: $_"
 			return
 		}
@@ -132,7 +132,7 @@ Function Add-AzDoProjectPermission{
 			$UserSearchUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/users?api-version=7.0-preview.1"
 			Write-Verbose "User Search URI: $UserSearchUri"
 
-			TRY {
+			TRY{
 				$Users = Invoke-RestMethod -Uri $UserSearchUri -Method GET -Headers $Header
 				$User = $Users.value | Where-Object {$_.mailAddress -eq $UserEmail}
 
@@ -143,7 +143,7 @@ Function Add-AzDoProjectPermission{
 				Write-Verbose "Found user: $($User.displayName)"
 				$MemberDescriptor = $User.descriptor
 			}
-			CATCH {
+			CATCH{
 				Write-Error "Failed to find user: $_"
 				return
 			}
@@ -153,7 +153,7 @@ Function Add-AzDoProjectPermission{
 			$AllGroupsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups?api-version=7.0-preview.1"
 			Write-Verbose "All Groups URI: $AllGroupsUri"
 
-			TRY {
+			TRY{
 				$AllGroups = Invoke-RestMethod -Uri $AllGroupsUri -Method GET -Headers $Header
 				$SourceGroup = $AllGroups.value | Where-Object {$_.displayName -eq $GroupName}
 
@@ -164,7 +164,7 @@ Function Add-AzDoProjectPermission{
 				Write-Verbose "Found group: $($SourceGroup.displayName)"
 				$MemberDescriptor = $SourceGroup.descriptor
 			}
-			CATCH {
+			CATCH{
 				Write-Error "Failed to find group: $_"
 				return
 			}
@@ -174,10 +174,10 @@ Function Add-AzDoProjectPermission{
 		$AddMemberUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/memberships/$MemberDescriptor/$GroupDescriptor`?api-version=7.0-preview.1"
 		Write-Verbose "Add Member URI: $AddMemberUri"
 
-		TRY {
+		TRY{
 			$Result = Invoke-RestMethod -Uri $AddMemberUri -Method PUT -Headers $Header -ContentType $JsonContentType
 		}
-		CATCH {
+		CATCH{
 			Write-Error "Failed to add membership: $_"
 			return
 		}

@@ -87,11 +87,11 @@ Function Get-AzDoProjectPermission{
 		$GroupsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups?scopeDescriptor=scp.$ProjectId&api-version=7.0-preview.1"
 		Write-Verbose "Groups URI: $GroupsUri"
 
-		TRY {
+		TRY{
 			$Groups = Invoke-RestMethod -Uri $GroupsUri -Method GET -Headers $Header
 			Write-Verbose "Found $($Groups.count) groups in project"
 		}
-		CATCH {
+		CATCH{
 			Write-Error "Failed to get project groups: $_"
 			return
 		}
@@ -102,7 +102,7 @@ Function Get-AzDoProjectPermission{
 
 			#Get user descriptor
 			$UserSearchUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/users?api-version=7.0-preview.1"
-			TRY {
+			TRY{
 				$Users = Invoke-RestMethod -Uri $UserSearchUri -Method GET -Headers $Header
 				$User = $Users.value | Where-Object {$_.mailAddress -eq $UserEmail}
 
@@ -113,7 +113,7 @@ Function Get-AzDoProjectPermission{
 				Write-Verbose "Found user: $($User.displayName)"
 				$UserDescriptor = $User.descriptor
 			}
-			CATCH {
+			CATCH{
 				Write-Error "Failed to find user: $_"
 				return
 			}
@@ -122,10 +122,10 @@ Function Get-AzDoProjectPermission{
 			$MembershipsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/memberships/$UserDescriptor`?api-version=7.0-preview.1"
 			Write-Verbose "Memberships URI: $MembershipsUri"
 
-			TRY {
+			TRY{
 				$Memberships = Invoke-RestMethod -Uri $MembershipsUri -Method GET -Headers $Header
 			}
-			CATCH {
+			CATCH{
 				Write-Error "Failed to get user memberships: $_"
 				return
 			}
@@ -163,10 +163,10 @@ Function Get-AzDoProjectPermission{
 			$MembersUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/memberships/$($TargetGroup.descriptor)?direction=down&api-version=7.0-preview.1"
 			Write-Verbose "Members URI: $MembersUri"
 
-			TRY {
+			TRY{
 				$Members = Invoke-RestMethod -Uri $MembersUri -Method GET -Headers $Header
 			}
-			CATCH {
+			CATCH{
 				Write-Error "Failed to get group members: $_"
 				return
 			}
@@ -183,16 +183,16 @@ Function Get-AzDoProjectPermission{
 				$UserUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/users/$MemberDescriptor`?api-version=7.0-preview.1"
 				$GroupUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups/$MemberDescriptor`?api-version=7.0-preview.1"
 
-				TRY {
+				TRY{
 					$MemberDetails = Invoke-RestMethod -Uri $UserUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 					$MemberType = "User"
 				}
-				CATCH {
-					TRY {
+				CATCH{
+					TRY{
 						$MemberDetails = Invoke-RestMethod -Uri $GroupUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 						$MemberType = "Group"
 					}
-					CATCH {
+					CATCH{
 						$MemberDetails = $null
 						$MemberType = "Unknown"
 					}
@@ -221,7 +221,7 @@ Function Get-AzDoProjectPermission{
 					#Get group members
 					$MembersUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/memberships/$($Group.descriptor)?direction=down&api-version=7.0-preview.1"
 
-					TRY {
+					TRY{
 						$Members = Invoke-RestMethod -Uri $MembersUri -Method GET -Headers $Header
 
 						IF ($Members.value.Count -eq 0) {
@@ -242,16 +242,16 @@ Function Get-AzDoProjectPermission{
 								$UserUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/users/$MemberDescriptor`?api-version=7.0-preview.1"
 								$GroupUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups/$MemberDescriptor`?api-version=7.0-preview.1"
 
-								TRY {
+								TRY{
 									$MemberDetails = Invoke-RestMethod -Uri $UserUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 									$MemberType = "User"
 								}
-								CATCH {
-									TRY {
+								CATCH{
+									TRY{
 										$MemberDetails = Invoke-RestMethod -Uri $GroupUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 										$MemberType = "Group"
 									}
-									CATCH {
+									CATCH{
 										$MemberDetails = $null
 										$MemberType = "Unknown"
 									}
@@ -268,7 +268,7 @@ Function Get-AzDoProjectPermission{
 							}
 						}
 					}
-					CATCH {
+					CATCH{
 						Write-Warning "Failed to get members for group '$($Group.displayName)': $_"
 						$Result += [PSCustomObject]@{
 							GroupName        = $Group.displayName

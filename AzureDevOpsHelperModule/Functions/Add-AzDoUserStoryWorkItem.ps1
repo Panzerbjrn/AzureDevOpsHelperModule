@@ -1,4 +1,4 @@
-﻿Function Add-AzDoUserStoryWorkItem{
+Function Add-AzDoUserStoryWorkItem{
 <#
 	.SYNOPSIS
 		Creates a work item of the type User Story
@@ -127,14 +127,16 @@
 			}
 		)
 
-		$Body += @([pscustomobject]@{
-				op = "add"
-				path = '/fields/System.AssignedTo'
-				value = $AssignedTo
-			}
-		)
+		IF ($AssignedTo){
+			$Body += @([pscustomobject]@{
+					op = "add"
+					path = '/fields/System.AssignedTo'
+					value = $AssignedTo
+				}
+			)
+		}
 
-		#This may need to have project added in front of the iteration.
+		#This may need to have project added in front of the iteration. A bit of a ToDo for future enhancement.
 		IF ($Iteration){
 			$Body += @([pscustomobject]@{
 					op = "add"
@@ -172,7 +174,8 @@
 		}
 
 		IF ($Tags){
-			ForEach ($Tag in $Tags) {$CombiTag += "$Tag;"}
+			# ForEach ($Tag in $Tags) {$CombiTag += "$Tag;"}
+			$CombiTag = ($Tags -join ';') + ';'
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/System.Tags'

@@ -29,5 +29,5 @@ function Get-AzDOPipelineStageStatus {
 
     $Uri = $BaseUri + "$Project/_apis/pipelines/$PipiLineID/runs/$RunID/stages?api-version=7.0"
     $Response = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header
-    return $Response
+    RETURN $Response
 }

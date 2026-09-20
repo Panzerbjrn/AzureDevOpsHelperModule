@@ -63,7 +63,7 @@
 		#Testing Repo Name or ID exists
 		if (-not $RepositoryId -and -not $RepositoryName) {
 			Write-Error "You must specify either a RepositoryId or a RepositoryName."
-			return
+			RETURN
 		}
 	}
 

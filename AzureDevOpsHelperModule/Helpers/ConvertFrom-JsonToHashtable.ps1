@@ -33,12 +33,12 @@ function ConvertFrom-JsonToHashtable {
 		[AllowNull()]
 		[string]$InputObject,
 
-		# Switch to denote that the returning object should be case sensitive
+		# Switch to denote that the RETURNing object should be case sensitive
 		[switch]
 		$casesensitive
 	)
 
-	# Perform a test to determine if the inputobject is null, if it is then return an empty hash table
+	# Perform a test to determine if the inputobject is null, if it is then RETURN an empty hash table
 	if ([String]::IsNullOrEmpty($InputObject)) {
 		$dict = @{}
 	} else {
@@ -56,5 +56,5 @@ function ConvertFrom-JsonToHashtable {
 
 	}
 
-	return $dict
+	RETURN $dict
 }

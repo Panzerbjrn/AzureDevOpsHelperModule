@@ -163,7 +163,7 @@ Function Grant-AzDoProjectPermission {
 
 		IF ($WhatIf) {
 			Write-Output "WhatIf: would create membership: user '$($userMatch.displayName)' -> group '$Group' (descriptor: $groupDescriptor)"
-			return
+			RETURN
 		}
 
 		Write-Verbose "Creating membership..."
@@ -171,7 +171,7 @@ Function Grant-AzDoProjectPermission {
 			$res = Invoke-RestMethod -Uri $membershipUri -Method PUT -Headers $Header -ErrorAction Stop -ContentType 'application/json' -Body $null
 			$MatchedGroupName = IF ($match) { $match.displayName } ELSE { $Group }
 			Write-Output "User '$($userMatch.displayName)' added to group '$MatchedGroupName'."
-			return $res
+			RETURN $res
 		}
 		CATCH{
 			Throw "Failed to add membership - $_"

@@ -102,7 +102,7 @@ Function Set-AzDOWorkItem {
 		}
 		if (-not $hasUpdate) {
 			Write-Error "At least one parameter to update must be specified." -ErrorAction Stop
-			return
+			RETURN
 		}
 
 

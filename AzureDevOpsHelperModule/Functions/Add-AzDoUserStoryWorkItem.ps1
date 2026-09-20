@@ -201,43 +201,32 @@ Function Add-AzDoUserStoryWorkItem{
 		Write-Verbose -Message $Body
 		Write-Verbose -Message "$Uri"
 
-		TRY{
-			$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
-			Return $Result
-		}
-		CATCH{
-			$Raw = $null
-			$Obj = $null
+		$StatusCode = $null
 
-			IF ($_.Exception.Response) {
-				$Stream = $_.Exception.Response.GetResponseStream()
-				$Reader = New-Object System.IO.StreamReader($Stream)
-				$Raw    = $Reader.ReadToEnd()
-				$Reader.Close()
-				$Stream.Close()
+		$Response = Invoke-RestMethod -Uri $Uri -Method POST `
+			-Headers $Header `
+			-ContentType "application/json-patch+json" `
+			-Body $Body `
+			-StatusCodeVariable StatusCode `
+			-SkipHttpErrorCheck
+
+		IF ($StatusCode -ge 400) {
+			# Surface any rule violations so the caller knows what to add
+			IF ($Response.customProperties.RuleValidationErrors) {
+				ForEach ($Rule in $Response.customProperties.RuleValidationErrors) {
+					Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+				}
 			}
 
-			IF ($Raw) {
-				TRY{
-					$Obj = $Raw | ConvertFrom-Json
-					Write-Error ($obj | ConvertTo-Json -Depth 10)
-				}
-				CATCH{
-					Write-Error $Raw
-					Return
-				}
-
-				# IF ($Obj.customProperties.RuleValidationErrors) {
-				# 	ForEach ($Rule in $Obj.customProperties.RuleValidationErrors) {
-				# 		Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
-				# 	}
-				# }
-
-				Write-Error ($Obj | ConvertTo-Json -Depth 10)
-			}
-			ELSE {
+			# Write the full error object as readable JSON
+			($Response | ConvertTo-Json -Depth 10) -split "`n" | ForEach-Object {
 				Write-Error $_
 			}
+
+			RETURN
 		}
+
+		RETURN $Response
+
 	}
 }

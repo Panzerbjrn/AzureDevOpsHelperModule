@@ -44,7 +44,7 @@ Function Get-AzDoProjectPermission{
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		Returns permission groups and optionally their members.
+		RETURNs permission groups and optionally their members.
 
 	.NOTES
 		Author:			Lars Panzerbjørn
@@ -74,7 +74,7 @@ Function Get-AzDoProjectPermission{
 		$ProjectInfo = Get-AzDOProjects | Where-Object {$_.name -eq $Project}
 		IF (-not $ProjectInfo) {
 			Write-Error "Project '$Project' not found."
-			return
+			RETURN
 		}
 		$ProjectId = $ProjectInfo.id
 		Write-Verbose "Project ID: $ProjectId"
@@ -93,7 +93,7 @@ Function Get-AzDoProjectPermission{
 		}
 		CATCH{
 			Write-Error "Failed to get project groups: $_"
-			return
+			RETURN
 		}
 
 		#If UserEmail specified, find user's group memberships
@@ -108,14 +108,14 @@ Function Get-AzDoProjectPermission{
 
 				IF (-not $User) {
 					Write-Error "User with email '$UserEmail' not found in organisation."
-					return
+					RETURN
 				}
 				Write-Verbose "Found user: $($User.displayName)"
 				$UserDescriptor = $User.descriptor
 			}
 			CATCH{
 				Write-Error "Failed to find user: $_"
-				return
+				RETURN
 			}
 
 			#Get user's memberships
@@ -127,7 +127,7 @@ Function Get-AzDoProjectPermission{
 			}
 			CATCH{
 				Write-Error "Failed to get user memberships: $_"
-				return
+				RETURN
 			}
 
 			#Filter to only project groups
@@ -156,7 +156,7 @@ Function Get-AzDoProjectPermission{
 			$TargetGroup = $Groups.value | Where-Object {$_.displayName -eq $GroupName}
 			IF (-not $TargetGroup) {
 				Write-Error "Group '$GroupName' not found in project '$Project'."
-				return
+				RETURN
 			}
 
 			#Get group members
@@ -168,7 +168,7 @@ Function Get-AzDoProjectPermission{
 			}
 			CATCH{
 				Write-Error "Failed to get group members: $_"
-				return
+				RETURN
 			}
 
 			#Resolve member details
@@ -282,7 +282,7 @@ Function Get-AzDoProjectPermission{
 				}
 			}
 			ELSE {
-				#Just return the groups without members
+				#Just RETURN the groups without members
 				$Result = $Groups.value | Select-Object @{N='GroupName';E={$_.displayName}},
 					@{N='Description';E={$_.description}},
 					@{N='Origin';E={$_.origin}},

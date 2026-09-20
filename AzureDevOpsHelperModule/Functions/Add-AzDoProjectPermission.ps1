@@ -50,7 +50,7 @@ Function Add-AzDoProjectPermission{
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		Returns the result of the permission assignment.
+		RETURNs the result of the permission assignment.
 
 	.NOTES
 		Author:			Lars Panzerbjørn
@@ -80,14 +80,14 @@ Function Add-AzDoProjectPermission{
 		#Validate that either UserEmail or GroupName is specified
 		IF (-not $UserEmail -and -not $GroupName) {
 			Write-Error "You must specify either a UserEmail or a GroupName."
-			return
+			RETURN
 		}
 
 		#Get Project ID
 		$ProjectInfo = Get-AzDOProjects | Where-Object {$_.name -eq $Project}
 		IF (-not $ProjectInfo) {
 			Write-Error "Project '$Project' not found."
-			return
+			RETURN
 		}
 		$ProjectId = $ProjectInfo.id
 		Write-Verbose "Project ID: $ProjectId"
@@ -116,14 +116,14 @@ Function Add-AzDoProjectPermission{
 
 			IF (-not $TargetGroup) {
 				Write-Error "Could not find group '$TargetGroupName' in project '$Project'."
-				return
+				RETURN
 			}
 			Write-Verbose "Found target group: $($TargetGroup.displayName)"
 			$GroupDescriptor = $TargetGroup.descriptor
 		}
 		CATCH{
 			Write-Error "Failed to get project groups: $_"
-			return
+			RETURN
 		}
 
 		#Resolve the user or group to add
@@ -138,14 +138,14 @@ Function Add-AzDoProjectPermission{
 
 				IF (-not $User) {
 					Write-Error "User with email '$UserEmail' not found in organisation."
-					return
+					RETURN
 				}
 				Write-Verbose "Found user: $($User.displayName)"
 				$MemberDescriptor = $User.descriptor
 			}
 			CATCH{
 				Write-Error "Failed to find user: $_"
-				return
+				RETURN
 			}
 		}
 		ELSEIF ($GroupName) {
@@ -159,14 +159,14 @@ Function Add-AzDoProjectPermission{
 
 				IF (-not $SourceGroup) {
 					Write-Error "Group '$GroupName' not found in organisation."
-					return
+					RETURN
 				}
 				Write-Verbose "Found group: $($SourceGroup.displayName)"
 				$MemberDescriptor = $SourceGroup.descriptor
 			}
 			CATCH{
 				Write-Error "Failed to find group: $_"
-				return
+				RETURN
 			}
 		}
 
@@ -179,7 +179,7 @@ Function Add-AzDoProjectPermission{
 		}
 		CATCH{
 			Write-Error "Failed to add membership: $_"
-			return
+			RETURN
 		}
 	}
 	END{

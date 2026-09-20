@@ -180,7 +180,31 @@
 		$Body = ConvertTo-Json $Body
 		Write-Verbose -Message $Body
 		Write-Verbose -Message "$Uri"
-		$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
+		TRY{
+			$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
+		}
+		CATCH{
+			$Raw = $null
+			IF ($_.Exception.Response) {
+				$Stream = $_.Exception.Response.GetResponseStream()
+				$Reader = New-Object System.IO.StreamReader($Stream)
+				$Raw    = $Reader.ReadToEnd()
+				$Reader.Close()
+				$Stream.Close()
+			}
+			IF($Raw) {
+				TRY {
+					$Obj = $Raw | ConvertFrom-Json
+					Write-Error ($Obj | ConvertTo-Json -Depth 10)
+				}
+				CATCH {
+					Write-Error $Raw
+				}
+			}
+			ELSE {
+				Write-Error $_
+			}
+		}
 	}
 	END{
 		Write-Verbose -Message "Ending $($MyInvocation.Mycommand)"

@@ -220,7 +220,7 @@ Function Add-AzDoUserStoryWorkItem{
 			IF ($Raw) {
 				TRY{
 					$Obj = $Raw | ConvertFrom-Json
-					Return $Obj
+					Write-Error ($obj | ConvertTo-Json -Depth 10)
 				}
 				CATCH{
 					Write-Error $Raw

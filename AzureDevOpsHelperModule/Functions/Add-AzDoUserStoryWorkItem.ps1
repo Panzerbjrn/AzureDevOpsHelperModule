@@ -211,17 +211,19 @@ Function Add-AzDoUserStoryWorkItem{
 			-SkipHttpErrorCheck
 
 		IF ($StatusCode -ge 400) {
-			# Surface any rule violations so the caller knows what to add
+			# This should output 
 			IF ($Response.customProperties.RuleValidationErrors) {
 				ForEach ($Rule in $Response.customProperties.RuleValidationErrors) {
-					Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+					#Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+					Write-Error "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
+					# THROW "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
 				}
 			}
 
 			# Write the full error object as readable JSON
-			($Response | ConvertTo-Json -Depth 10) -split "`n" | ForEach-Object {
-				Write-Error $_
-			}
+			# ($Response | ConvertTo-Json -Depth 10) -split "`n" | ForEach-Object {
+			# 	Write-Error $_
+			# }
 
 			RETURN
 		}

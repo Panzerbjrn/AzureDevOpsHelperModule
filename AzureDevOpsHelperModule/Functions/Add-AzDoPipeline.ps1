@@ -33,7 +33,6 @@
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:	2024.11.09
-		Purpose/Change: Initial script development
 #>
 	[CmdletBinding()]
 	param(

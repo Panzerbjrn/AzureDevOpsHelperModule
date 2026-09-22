@@ -1,31 +1,23 @@
 $ProjectRoot 	= (Resolve-Path "$PSScriptRoot\..").path
 $ModuleName 	= Split-Path $ProjectRoot -Leaf
-$ModuleRoot 	= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath "$ModuleName.psm1"
-$ManifestRoot 	= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath "$ModuleName.psd1"
-$Functions		= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath Functions
-$Helpers		= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath Helpers
-
-BeforeAll {
-	#Write-Host 'BeforeAll'
-	TRY{
-		Import-module PSScriptAnalyzer -ErrorAction STOP
-	}
-	CATCH{
-		Install-Module -Name PSScriptAnalyzer
-	}
-	IF(!(Get-Module PSScriptAnalyzer)){
-		Install-Module -Name PSScriptAnalyzer -Force
-	}
-
-	$ProjectRoot 	= (Resolve-Path "$PSScriptRoot\..").path
-	$ModuleName 	= Split-Path $ProjectRoot -Leaf
-	$ModuleRoot 	= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath "$ModuleName.psm1"
-	$ManifestRoot 	= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath "$ModuleName.psd1"
-	$Functions		= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath Functions
-	$Helpers		= Join-Path -Path $ProjectRoot -ChildPath $ModuleName -AdditionalChildPath Helpers
-}
+$ModuleRoot 	= Join-Path -Path (Join-Path $ProjectRoot $ModuleName) -ChildPath "$ModuleName.psm1"
+$ManifestRoot 	= Join-Path -Path (Join-Path $ProjectRoot $ModuleName) -ChildPath "$ModuleName.psd1"
+$Functions		= Join-Path -Path $ProjectRoot -ChildPath "$ModuleName\Functions"
+$Helpers		= Join-Path -Path $ProjectRoot -ChildPath "$ModuleName\Helpers"
 
 Describe "General project validation: $ModuleName" -Tag 'Module_Validation' {
+
+	BeforeAll {
+		TRY{
+			Import-module PSScriptAnalyzer -ErrorAction STOP
+		}
+		CATCH{
+			Install-Module -Name PSScriptAnalyzer
+		}
+		IF(!(Get-Module PSScriptAnalyzer)){
+			Install-Module -Name PSScriptAnalyzer -Force
+		}
+	}
 
 	Context 'Project should be viable' {
 
@@ -45,6 +37,40 @@ Describe "General project validation: $ModuleName" -Tag 'Module_Validation' {
 
 		it 'Passes all default PSScriptAnalyzer rules' {
 			Invoke-ScriptAnalyzer -Path $ManifestRoot -ExcludeRule PSUseToExportFieldsInManifest | should -BeNullOrEmpty
+		}
+	}
+}
+
+Describe "Module Import: $ModuleName" -Tag 'Module_Import' {
+
+	Context 'Module should be importable' {
+
+		It "Should import without errors" {
+			{ Import-Module -Path $ManifestRoot -ErrorAction Stop } | Should -Not -Throw
+		}
+
+		It "Should have module in Get-Module output" {
+			Get-Module -Name $ModuleName | Should -Not -BeNullOrEmpty
+		}
+	}
+
+	Context 'Module should export correct functions' {
+
+		BeforeAll {
+			$Module = Get-Module -Name $ModuleName
+			$ExportedFunctions = $Module.ExportedFunctions.Keys
+		}
+
+		It "Should export 27 functions" {
+			$ExportedFunctions.Count | Should -Be 27
+		}
+
+		It "Should include Add-AzDoRepo function" {
+			$ExportedFunctions | Should -Contain 'Add-AzDoRepo'
+		}
+
+		It "Should include Get-AzDoAccessToken function" {
+			$ExportedFunctions | Should -Contain 'Get-AzDoAccessToken'
 		}
 	}
 }

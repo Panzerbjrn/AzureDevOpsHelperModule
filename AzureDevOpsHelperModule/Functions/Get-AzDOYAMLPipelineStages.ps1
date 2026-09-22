@@ -52,3 +52,4 @@ Function Get-AzDOYAMLPipelineStages {
         # Return the YAML content for further processing
         $YamlContent
     }
+}

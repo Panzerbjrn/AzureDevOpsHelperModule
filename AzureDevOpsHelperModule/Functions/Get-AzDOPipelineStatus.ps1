@@ -1,21 +1,28 @@
 Function Get-AzDOPipelineStatus {
 <#
 	.SYNOPSIS
+		Gets the status of a pipeline run.
 
 	.DESCRIPTION
+		Retrieves the status and details of a specified pipeline run.
+
+	.EXAMPLE
+		Get-AzDOPipelineStatus -Project "Alpha Devs" -PipelineId 12 -RunID 1
 
 	.PARAMETER Project
+		The name of your Azure DevOps project.
 
-	.PARAMETER PipiLineID
+	.PARAMETER PipelineId
+		The ID of your pipeline.
 
 	.PARAMETER RunID
-
-    .Example
+		The ID of the pipeline run.
 
 	.INPUTS
 		Input is from command line or called from a script.
 
 	.OUTPUTS
+		Returns the pipeline run status object.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

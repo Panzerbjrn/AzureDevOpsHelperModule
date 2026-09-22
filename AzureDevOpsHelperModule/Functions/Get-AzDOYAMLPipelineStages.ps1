@@ -15,8 +15,11 @@ Function Get-AzDOYAMLPipelineStages {
     .PARAMETER PipelineID
         The ID of your pipeline.
 
+    .INPUTS
+        Input is from command line or called from a script.
+
     .OUTPUTS
-        This will output the stages of the specified YAML pipeline.
+        Returns the stages extracted from the YAML pipeline definition.
 
     .NOTES
         Author:             Lars Panzerbjørn
@@ -42,7 +45,10 @@ Function Get-AzDOYAMLPipelineStages {
 
         # Extract the YAML content from the pipeline definition
         $YamlContent = $PipelineDefinition.configuration.repository.yamlFileContent
-
-        # Convert YAML to PSObject
     }
-}
+
+    END {
+        Write-Verbose "Ending $($MyInvocation.Mycommand)"
+        # Return the YAML content for further processing
+        $YamlContent
+    }

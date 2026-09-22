@@ -1,20 +1,16 @@
 ﻿Function Add-AzDoUserStoryComment{
 <#
 	.SYNOPSIS
-		Adds a comment to a user story
+		Adds a comment to a work item.
 
 	.DESCRIPTION
-		Creates a work item of the type User Story
+		Adds a comment to an Azure DevOps work item.
 
 	.EXAMPLE
-		New-AzDoUserStoryWorkItem -Organisation panzerbjrn -Project "Alpha Devs" -Title "New Story Item"
+		Add-AzDoUserStoryComment -Project "Alpha Devs" -WorkItemID 123 -Comment "This is my comment"
 
 	.EXAMPLE
-		This example first get details from another work item, and uses those to place a new item on the same board.
-		This also uses <br> to break lines in the descrption field.
-
-		$WItem = Get-AzDoUserStoryWorkItem -Organisation $OrganizationName -Project $TeamName -WorkItemID 123456
-		New-AzDoUserStoryWorkItem  -Organisation $$Organisation -Project $TeamName -Title "Important Scripting work" -Board $WItem.fields.'System.AreaPath' -Description "Important work <br> Line 2" -AssignedTo $WItem.fields.'System.AssignedTo'.displayName -Verbose -Tags "Tag1","Tag2" -AcceptanceCriteria "Accepted"
+		Add-AzDoUserStoryComment -Organisation "MyOrg" -Project "Alpha Devs" -WorkItemID 123 -Comment "Updated status"
 
 	.PARAMETER OrganizationName
 		The name of your Azure Devops Organisation
@@ -23,19 +19,16 @@
 		The name of your Azure Devops Project or Team
 
 	.PARAMETER Board
-		The name of your Azure Devops Board you want to add the item to
-
-	.PARAMETER WorkItemID
-		The ID of the work item you want to add the comment to
+		Optional. The board name (currently not used in the comment operation).
 
 	.PARAMETER Comment
-		The comment you want to add to the work item
+		The comment text to add to the work item.
 
 	.INPUTS
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the rest api response.
+		Returns the updated work item with the comment added.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

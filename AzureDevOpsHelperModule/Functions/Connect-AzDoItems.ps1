@@ -1,27 +1,28 @@
 ﻿Function Connect-AzDoItems{
 <#
 	.SYNOPSIS
-		Links two Azure Devops item in a parent/child relationship
+		Links two Azure DevOps work items in a parent/child relationship.
 
 	.DESCRIPTION
-		Links two Azure Devops item in a parent/child relationship
+		Links two Azure DevOps work items in a parent/child relationship.
 
-	.PARAMETER ProjectName
-		The name of your Azure Devops Project or Team
+	.EXAMPLE
+		Connect-AzDoItems -Project "Alpha Devs" -ParentItemID 123 -ChildItemID 456
+
+	.PARAMETER Project
+		The name of your Azure DevOps Project or Team
 
 	.PARAMETER ParentItemID
-		The name of your Azure Devops Project or Team
+		The ID of the parent work item.
 
 	.PARAMETER ChildItemID
-		The name of your Azure Devops Project or Team
-
-    .Example
+		The ID of the child work item to link.
 
 	.INPUTS
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the logfile.
+		Returns the updated child work item with the parent link added.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

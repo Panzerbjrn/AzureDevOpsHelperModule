@@ -1,21 +1,28 @@
 function Get-AzDOPipelineStageStatus {
 <#
 	.SYNOPSIS
+		Gets the stage status for a pipeline run.
 
 	.DESCRIPTION
+		Retrieves the status of all stages in a specified pipeline run.
 
-	.PARAMETER project
+	.EXAMPLE
+		Get-AzDOPipelineStageStatus -Project "Alpha Devs" -PipelineId 12 -RunID 1
 
-	.PARAMETER PipiLineID
+	.PARAMETER Project
+		The name of your Azure DevOps project.
+
+	.PARAMETER PipelineId
+		The ID of your pipeline.
 
 	.PARAMETER RunID
-
-    .Example
+		The ID of the pipeline run.
 
 	.INPUTS
 		Input is from command line or called from a script.
 
 	.OUTPUTS
+		Returns the stage status objects for the pipeline run.
 
 	.NOTES
 		Author:				Lars Panzerbjørn
@@ -23,11 +30,11 @@ function Get-AzDOPipelineStageStatus {
 #>
     param (
         [string]$Project = $Script:Project,
-        [string]$PipiLineID,
+        [string]$PipelineId,
         [string]$RunID
     )
 
-    $Uri = $BaseUri + "$Project/_apis/pipelines/$PipiLineID/runs/$RunID/stages?api-version=7.0"
+    $Uri = $BaseUri + "$Project/_apis/pipelines/$PipelineId/runs/$RunID/stages?api-version=7.0"
     $Response = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header
     RETURN $Response
 }

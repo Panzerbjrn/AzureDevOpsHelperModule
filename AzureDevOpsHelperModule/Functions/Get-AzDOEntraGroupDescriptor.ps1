@@ -15,7 +15,11 @@ Function Get-AzDOEntraGroupDescriptor {
 
 	.PARAMETER Organisation
 		The name of your Azure DevOps organization.
+	.INPUTS
+		Input is from command line or called from a script.
 
+	.OUTPUTS
+		Returns the group object with descriptor.
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:		2025.05.20

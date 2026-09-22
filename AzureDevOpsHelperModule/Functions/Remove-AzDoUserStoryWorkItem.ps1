@@ -14,12 +14,6 @@
 		$TeamName = "Alpha Devs"
 		Remove-AzDoUserStoryWorkItem -Project $TeamName -WorkItemID 60505
 
-	.PARAMETER PersonalAccessToken
-		This is your personal access token from Azuree Devops.
-
-	.PARAMETER OrganisationName
-		The name of your Azure Devops Organisation
-
 	.PARAMETER Project
 		The name of your Azure Devops project. Is also often a team name.
 
@@ -30,7 +24,7 @@
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the item being deleted.
+		Returns the deleted work item object.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

@@ -26,13 +26,12 @@
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output a list of projects.
+		Returns the work item object.
 
 	.NOTES
 		Version:			1
 		Author:				Lars Panzerbjørn
 		Creation Date:		2020.07.31
-		Purpose/Change: Initial script development
 #>
 	[CmdletBinding()]
 	param(

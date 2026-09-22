@@ -1,10 +1,10 @@
 Function Get-AzDORepo{
 <#
 	.SYNOPSIS
-		This will get This will get various details for a Repo in your Organisation.
+		Gets details for a repository in an Azure DevOps project.
 
 	.DESCRIPTION
-		This will get This will get various details for a Repo in your Organisation.
+		Gets details for one or more Git repositories in an Azure DevOps project.
 
 	.EXAMPLE
 		This example will RETURN details for all repos in the current project.

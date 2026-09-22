@@ -1,13 +1,13 @@
 ﻿Function Add-AzDoRepo{
 <#
 	.SYNOPSIS
-		Creates a work item of the type Task
+		Creates a new repository in an Azure DevOps project.
 
 	.DESCRIPTION
-		Creates a work item of the type Task
+		Creates a new Git repository in the specified Azure DevOps project.
 
 	.EXAMPLE
-		New-AzDoRepo -PersonalAccessToken $PAT -Organisation $Organisation -Project $Project -RepositoryName NewCoolRepo
+		Add-AzDoRepo -Project $Project -RepositoryName NewCoolRepo
 
 	.PARAMETER OrganizationName
 		The name of your Azure Devops Organisation
@@ -21,10 +21,12 @@
 	.INPUTS
 		Input is from command line or called from a script.
 
+	.OUTPUTS
+		Returns the created repository object.
+
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:	2024.11.09
-		Purpose/Change: Initial script development
 #>
 	[CmdletBinding()]
 	param(

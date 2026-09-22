@@ -1,4 +1,31 @@
 Function Register-AzDOEntraGroup {
+    <#
+        .SYNOPSIS
+            Materializes an Entra ID group in Azure DevOps.
+
+        .DESCRIPTION
+            Registers an Entra ID group in Azure DevOps by converting it to a materialized group.
+            This makes the Entra group available for use in Azure DevOps access control.
+
+        .EXAMPLE
+            Register-AzDOEntraGroup -EntraObjectId "d1cb703e-b4d0-4978-9664-80cd935462ec"
+
+        .PARAMETER EntraObjectId
+            The Entra ID Object ID (GUID) of the group to materialize.
+
+        .PARAMETER Organisation
+            The name of your Azure DevOps organization.
+
+        .INPUTS
+            Input is from command line or called from a script.
+
+        .OUTPUTS
+            Returns the materialized group object.
+
+        .NOTES
+            Author:             Lars Panzerbjørn
+            Creation Date:      2025.05.20
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]

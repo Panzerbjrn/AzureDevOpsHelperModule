@@ -43,10 +43,12 @@ Function Add-AzDoGroupMember {
 	.INPUTS
 		Input is from command line or called from a script.
 
+	.OUTPUTS
+		Returns the membership object for the added member.
+
 	.NOTES
-		Author:			Lars Panzerbjørn
-		Creation Date:	2025.05.20
-		Purpose/Change: Initial script development
+		Author:				Lars Panzerbjørn
+		Creation Date:		2025.05.20
 #>
 	[CmdletBinding(DefaultParameterSetName = 'ByDescriptor')]
 	param(

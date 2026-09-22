@@ -56,7 +56,7 @@ Function Set-AzDOWorkItem {
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the response from the server.
+		Returns the updated work item object.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

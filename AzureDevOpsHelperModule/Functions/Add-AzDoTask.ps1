@@ -7,7 +7,7 @@
 		Creates a work item of the type Task
 
 	.EXAMPLE
-		New-AzDoTask -PersonalAccessToken $PAT -Project $Project -TaskTitle "Test Task" -Board $Board -Description "Test Description"
+		Add-AzDoTask -Project $Project -TaskTitle "Test Task" -Description "Test Description" -ParentItemID 123
 
 	.PARAMETER ProjectName
 		The name of your Azure Devops Project or Team
@@ -28,12 +28,11 @@
 		Input is from command line or called from a script.
 
 	.OUTPUTS
-		This will output the logfile.
+		Returns the created task object.
 
 	.NOTES
 		Author:				Lars Panzerbjørn
 		Creation Date:		2020.07.31
-		Purpose/Change: Initial script development
 #>
 	[CmdletBinding()]
 	param(

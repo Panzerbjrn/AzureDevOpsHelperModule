@@ -1,4 +1,34 @@
 Function Add-AzDOEntraGroupToProjectGroup {
+    <#
+        .SYNOPSIS
+            Adds an Entra ID group to an Azure DevOps project group.
+
+        .DESCRIPTION
+            Adds an Entra ID group (materialized in DevOps) to an existing Azure DevOps project group.
+            This function uses the Member Entitlement Management API to create the entitlement.
+
+        .EXAMPLE
+            Add-AzDOEntraGroupToProjectGroup -EntraObjectId "d1cb703e-b4d0-4978-9664-80cd935462ec" -ProjectGroupDescriptor "vssgp.Uy0xLTktMTU5Lg"
+
+        .PARAMETER EntraObjectId
+            The Entra ID Object ID (GUID) of the group to add.
+
+        .PARAMETER ProjectGroupDescriptor
+            The descriptor of the target Azure DevOps project group.
+
+        .PARAMETER Organisation
+            The name of your Azure DevOps organization.
+
+        .INPUTS
+            Input is from command line or called from a script.
+
+        .OUTPUTS
+            Returns the group entitlement object.
+
+        .NOTES
+            Author:             Lars Panzerbjørn
+            Creation Date:      2025.05.20
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]

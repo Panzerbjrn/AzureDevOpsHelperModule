@@ -22,7 +22,11 @@ Function Start-AzDOPipeline{
 
     .PARAMETER BranchName
         The name of the branch to run the pipeline on. Defaults to the pipeline's default branch if not specified.
+	.INPUTS
+		Input is from command line or called from a script.
 
+	.OUTPUTS
+		Returns the pipeline run object.
 	.NOTES
 		Author:				Lars Panzerbjørn
 		Creation Date:		2020.07.31

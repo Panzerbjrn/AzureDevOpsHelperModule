@@ -7,7 +7,7 @@
 		Creates an Azure DevOps pipeline by using its pipeline ID or name.
 
 	.EXAMPLE
-		New-AzDoPipeline -PipelineName "Test_Pipe" -Project "CI Team" -RepositoryName CoolRepo
+		Add-AzDoPipeline -PipelineName "Test_Pipe" -Project "CI Team" -RepositoryName CoolRepo -YAMLPath "/azure-pipelines.yml"
 
 	.PARAMETER PipelineName
 		The name of pipeline you wish to create
@@ -29,7 +29,8 @@
 
 	.INPUTS
 		Input is from command line or called from a script.
-
+	.OUTPUTS
+		Returns the created pipeline object.
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:	2024.11.09

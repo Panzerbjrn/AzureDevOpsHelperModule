@@ -7,13 +7,16 @@ Function Get-AzDOWorkItemTypes{
 		This will get the work item types available in your Azure DevOps project.
 
 	.EXAMPLE
-		Get-WorkItemTypes -Project "Alpha Devs"
+		Get-AzDOWorkItemTypes -Project "Alpha Devs"
 
 	.PARAMETER Project
 		The name of your Azure Devops project. Is also often a team name.
 
 	.INPUTS
 		Input is from command line or called from a script.
+
+	.OUTPUTS
+		Returns a list of work item type names available in the project.
 
 	.NOTES
 		Author:				Lars Panzerbjørn

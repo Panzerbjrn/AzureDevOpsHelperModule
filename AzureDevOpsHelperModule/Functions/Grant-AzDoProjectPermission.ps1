@@ -24,7 +24,7 @@ Function Grant-AzDoProjectPermission {
 
 	.NOTES
 		Author:			Lars Panzerbjørn
-		Creation Date:	2025.12.05
+		Creation Date:		2024.12.05
 #>
 	[CmdletBinding()]
 	param(

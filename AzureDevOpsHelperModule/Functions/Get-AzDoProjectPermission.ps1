@@ -49,7 +49,7 @@ Function Get-AzDoProjectPermission{
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:	2024.12.05
-		Purpose/Change: Initial script development
+
 #>
 	[CmdletBinding()]
 	param(

@@ -64,7 +64,7 @@ Function Register-AzDOEntraGroup {
             $Result
         }
         catch {
-            Write-Error "Failed to materialize group. Error: $_"
+                THROW "Failed to materialize group. Error: $_"
         }
     }
 

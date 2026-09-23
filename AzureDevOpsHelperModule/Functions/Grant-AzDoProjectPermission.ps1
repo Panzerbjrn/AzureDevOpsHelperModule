@@ -45,11 +45,11 @@ Function Grant-AzDoProjectPermission {
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
 		IF (-not $Header) {
-			Throw "Authorization header not available. Run Get-AzDoAccessToken first."
+			THROW "Authorization header not available. Run Get-AzDoAccessToken first."
 		}
 
 		IF (-not $BaseUri) {
-			Throw "BaseUri not found. Run Get-AzDoAccessToken first."
+			THROW "BaseUri not found. Run Get-AzDoAccessToken first."
 		}
 
 		# Derive organization from BaseUri (assumes format https://dev.azure.com/{org}/ )
@@ -71,7 +71,7 @@ Function Grant-AzDoProjectPermission {
 			$proj = Invoke-RestMethod -Uri $projUri -Method GET -Headers $Header -ErrorAction Stop
 		}
 		CATCH{
-			Throw "Failed to get project $Project - $_"
+			THROW "Failed to get project $Project - $_"
 		}
 		$projectId = $proj.id
 		Write-Verbose "ProjectId: $projectId"
@@ -83,7 +83,7 @@ Function Grant-AzDoProjectPermission {
 			$allGroups = Invoke-RestMethod -Uri $groupsUri -Method GET -Headers $Header -ErrorAction Stop
 		}
 		CATCH{
-			Throw "Failed retrieving graph groups - $_"
+			THROW "Failed retrieving graph groups - $_"
 		}
 
 		# Heuristics to find group descriptor: try exact project-prefixed name, then simple name, then contains.
@@ -133,7 +133,7 @@ Function Grant-AzDoProjectPermission {
 		}
 
 		IF (-not $groupDescriptor) {
-			Throw "Unable to find group or team descriptor for group '$Group' in project '$Project'. Ensure you have rights to read graph groups."
+			THROW "Unable to find group or team descriptor for group '$Group' in project '$Project'. Ensure you have rights to read graph groups."
 		}
 
 		# Find the user principal (graph user descriptor)
@@ -143,7 +143,7 @@ Function Grant-AzDoProjectPermission {
 			$allUsers = Invoke-RestMethod -Uri $usersUri -Method GET -Headers $Header -ErrorAction Stop
 		}
 		CATCH{
-			Throw "Failed retrieving graph users - $_"
+			THROW "Failed retrieving graph users - $_"
 		}
 		$userMatch = $allUsers.value | Where-Object {
 			($_.principalName -and ($_.principalName -ieq $User -or $_.principalName -like "*$User*")) -or
@@ -152,7 +152,7 @@ Function Grant-AzDoProjectPermission {
 		} | Select-Object -First 1
 
 		IF (-not $userMatch) {
-			Throw "Unable to find a graph user matching '$User'. Ensure the user exists in the organization."
+			THROW "Unable to find a graph user matching '$User'. Ensure the user exists in the organization."
 		}
 		Write-Verbose "Found user: $($userMatch.displayName) (descriptor: $($userMatch.descriptor))"
 		$userDescriptor = $userMatch.descriptor
@@ -174,7 +174,7 @@ Function Grant-AzDoProjectPermission {
 			RETURN $res
 		}
 		CATCH{
-			Throw "Failed to add membership - $_"
+			THROW "Failed to add membership - $_"
 		}
 	}
 

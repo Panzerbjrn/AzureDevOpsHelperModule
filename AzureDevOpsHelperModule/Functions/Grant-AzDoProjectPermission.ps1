@@ -26,7 +26,7 @@ Function Grant-AzDoProjectPermission {
 		Author:			Lars Panzerbjørn
 		Creation Date:		2024.12.05
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[Alias('TeamName')]

@@ -22,7 +22,7 @@ Function Get-AzDOWorkItemTypes{
 		Author:				Lars Panzerbjørn
 		Creation Date:		2022.06.21
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[Alias('TeamName')]

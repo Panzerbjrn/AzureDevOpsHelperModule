@@ -22,7 +22,7 @@ Function Get-AzDOPipelineStages {
         Author:             Lars Panzerbjørn
         Creation Date:      2024.07.25
 #>
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$False)]
     param(
         [Parameter()]
         [string]$Project = $Script:Project,

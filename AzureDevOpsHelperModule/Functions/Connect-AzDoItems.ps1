@@ -28,7 +28,7 @@
 		Author:				Lars Panzerbjørn
 		Creation Date:		2020.07.31
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[Alias('TeamName')]

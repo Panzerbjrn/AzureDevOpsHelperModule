@@ -62,7 +62,7 @@ Function Set-AzDOWorkItem {
 		Author:				Lars Panzerbjørn
 		Creation Date:		2024.12.08
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[string]$Project = $Script:Project,

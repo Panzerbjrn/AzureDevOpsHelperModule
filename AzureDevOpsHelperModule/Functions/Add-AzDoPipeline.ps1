@@ -35,7 +35,7 @@
 		Author:			Lars Panzerbjørn
 		Creation Date:	2024.11.09
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter(Mandatory)]
 		[string]$PipelineName,

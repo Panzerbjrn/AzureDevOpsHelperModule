@@ -24,7 +24,7 @@ Function Get-AzDOEntraGroupDescriptor {
 		Author:			Lars Panzerbjørn
 		Creation Date:		2025.05.20
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter(Mandatory)]
 		[string]$EntraObjectId,

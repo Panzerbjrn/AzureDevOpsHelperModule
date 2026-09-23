@@ -27,7 +27,7 @@ function ConvertFrom-JsonToHashtable {
 		ConvertFrom-JsonToHashtable $JSON
 #>
 
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter(Mandatory)]
 		[AllowNull()]

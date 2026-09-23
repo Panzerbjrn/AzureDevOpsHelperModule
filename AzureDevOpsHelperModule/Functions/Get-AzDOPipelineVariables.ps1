@@ -25,7 +25,7 @@ Function Get-AzDOPipelineVariables{
 		Author:				Lars Panzerbjørn
 		Creation Date:		2024.09.22
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[Alias('TeamName')]

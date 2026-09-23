@@ -44,7 +44,7 @@ Function Get-AzDoAccessToken{
 		Author:				Lars Panzerbjørn
 		Creation Date:		2021.07.30
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param
 	(
         [Parameter(Mandatory)]

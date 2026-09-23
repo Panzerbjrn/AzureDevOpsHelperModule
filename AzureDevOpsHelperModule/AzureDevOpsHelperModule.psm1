@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+﻿[CmdletBinding(PositionalBinding=$False)]
 param()
 
 Write-Verbose $PSScriptRoot

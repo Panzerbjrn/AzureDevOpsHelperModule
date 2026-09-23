@@ -39,7 +39,7 @@ Function Get-AzDORepo{
 		Author:				Lars Panzerbjørn
 		Creation Date:		2024.11.11
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter()]
 		[Alias('RepoName')]

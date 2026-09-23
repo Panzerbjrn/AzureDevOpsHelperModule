@@ -57,7 +57,7 @@ Function Add-AzDoProjectPermission{
 		Creation Date:	2024.12.05
 
 #>
-	[CmdletBinding()]
+	[CmdletBinding(PositionalBinding=$False)]
 	param(
 		[Parameter(Mandatory)]
 		[Alias('TeamName')]

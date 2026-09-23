@@ -22,7 +22,7 @@ Function Remove-AzDoPipeline {
         The personal access token to authenticate with Azure DevOps.
 #>
 
-    [CmdletBinding()]
+    [CmdletBinding(PositionalBinding=$False)]
     Param(
         [Parameter(Mandatory)]
         [string]$PipelineId,

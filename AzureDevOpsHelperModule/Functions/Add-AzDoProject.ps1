@@ -33,6 +33,7 @@ Function Add-AzDoProject{
 	.NOTES
 		Author:			Lars Panzerbjørn
 		Creation Date:	2026.09.25
+		Gotcha: 		It can take a few seconds for the project to appear in the Azure DevOps portal.
 #>
 	[CmdletBinding(PositionalBinding=$False)]
 	param(

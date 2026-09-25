@@ -72,7 +72,7 @@ Function Add-AzDoGroupMember {
 		[string]$Project,
 
 		[Parameter()]
-		[string]$Organization = $Script:Organization
+		[string]$Organization = $Script:Organisation
 	)
 
 	BEGIN {
@@ -138,7 +138,7 @@ Function Add-AzDoGroupMember {
 		}
 
 		# Build URI for adding membership
-		$Uri = "https://vssps.dev.azure.com/$Organization/_apis/graph/memberships/$MemberDescriptor/$ContainerDescriptor?api-version=$ApiVersion"
+		$Uri = "https://vssps.dev.azure.com/$Organization/_apis/graph/memberships/$MemberDescriptor/$ContainerDescriptor`?api-version=$ApiVersion"
 		Write-Verbose "Membership URI: $Uri"
 
 		# The API expects a PUT request with no body

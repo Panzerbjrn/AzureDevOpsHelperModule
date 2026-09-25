@@ -56,8 +56,17 @@ Function Add-AzDOProjectGroup {
 	PROCESS {
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
+		if (-not $Organisation -and $BaseUri -match '^https://dev\.azure\.com/([^/]+)/') {
+			$Organisation = $Matches[1]
+		}
+
 		if (-not $Project) {
 			Write-Error 'You must specify a Project or connect with a default project set.'
+			return
+		}
+
+		if (-not $Organisation) {
+			Write-Error 'You must specify an Organisation or connect with a default organisation set.'
 			return
 		}
 

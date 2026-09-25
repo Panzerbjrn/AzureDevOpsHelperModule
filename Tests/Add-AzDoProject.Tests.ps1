@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module $ModuleRoot -ErrorAction Stop
 
 Describe "Add-AzDoProject" -Tag 'Function' {
 
@@ -24,7 +24,7 @@ Describe "Add-AzDoProject" -Tag 'Function' {
 		}
 
 		It "Should create a new project by posting the expected payload" {
-			InModuleScope $ModuleName {
+			InModuleScope 'AzureDevOpsHelperModule' {
 				$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
 				$Script:Header = @{ Authorization = 'Basic test'; accept = 'application/json' }
 				$script:capturedUri = $null

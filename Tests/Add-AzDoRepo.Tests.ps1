@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module $ModuleRoot -ErrorAction Stop
 
 Describe "Add-AzDoRepo" -Tag 'Function' {
 

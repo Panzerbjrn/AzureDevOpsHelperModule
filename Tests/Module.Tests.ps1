@@ -61,8 +61,8 @@ Describe "Module Import: $ModuleName" -Tag 'Module_Import' {
 			$ExportedFunctions = $Module.ExportedFunctions.Keys
 		}
 
-		It "Should export 28 functions" {
-			$ExportedFunctions.Count | Should -Be 28
+		It "Should export 29 functions" {
+			$ExportedFunctions.Count | Should -Be 29
 		}
 
 		It "Should include Add-AzDoRepo function" {

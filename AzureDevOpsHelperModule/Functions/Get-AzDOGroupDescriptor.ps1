@@ -66,8 +66,7 @@ PROCESS{
         $Uri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/descriptors/$GroupOriginId?api-version=$ApiVersion"
         Write-Verbose "$Uri"
         $Response = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Header
-    }
-    ELSE{
+    }ELSE{
         # Build the scopeDescriptor for the project if provided
         $ScopeDescriptor = $null
         IF($Project) {
@@ -81,8 +80,7 @@ PROCESS{
         # Build base URI for groups
         IF($ScopeDescriptor) {
             $BaseGroupUri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/groups?scopeDescriptor=$ScopeDescriptor&api-version=$ApiVersion"
-        }
-        ELSE{
+        }ELSE{
             $BaseGroupUri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/groups?api-version=$ApiVersion"
         }
         Write-Verbose "$BaseGroupUri"
@@ -111,8 +109,7 @@ PROCESS{
         # Filter by name if provided
         IF($GroupName) {
             $Response = $AllGroups | Where-Object { $_.displayName -eq $GroupName }
-        }
-        ELSE{
+        }ELSE{
             $Response = $AllGroups
         }
     }

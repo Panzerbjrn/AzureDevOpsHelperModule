@@ -94,7 +94,7 @@ Function Set-AzDOWorkItem {
 
 		$updateParams = @('Status','Reason','OriginalEstimate','RemainingWork','CompletedWork','WorkItemTitle','CalculateRemainingWork','AddToCompletedWork','AddTags','ReplaceTags','Tags')
 		$hasUpdate = $False
-		foreach ($Param in $updateParams) {
+		ForEach ($Param in $updateParams) {
 			IF($PSBoundParameters.ContainsKey($Param) -and ($PSBoundParameters[$Param] -or $PSBoundParameters[$Param] -is [switch])) {
 			$hasUpdate = $true
 			break

@@ -54,9 +54,7 @@ Function Grant-AzDoProjectPermission {
 
 		# Derive organization from BaseUri (assumes format https://dev.azure.com/{org}/ )
 		$Org = $null
-		IF($BaseUri -match 'https?://dev.azure.com/([^/]+)/?') { $Org = $Matches[1] }
-		ELSEIF($BaseUri -match 'https?://([^/.]+)\.visualstudio\.com/?') { $Org = $Matches[1] }
-		ELSE { Write-Verbose "Could not reliably parse organization from BaseUri: $BaseUri" }
+		IF($BaseUri -match 'https?://dev.azure.com/([^/]+)/?') { $Org = $Matches[1] }ELSEIF($BaseUri -match 'https?://([^/.]+)\.visualstudio\.com/?') { $Org = $Matches[1] }ELSE { Write-Verbose "Could not reliably parse organization from BaseUri: $BaseUri" }
 
 		Write-Verbose "Organization determined as: $Org"
 	}
@@ -69,8 +67,7 @@ Function Grant-AzDoProjectPermission {
 		Write-Verbose "Getting project details from $projUri"
 		TRY{
 			$proj = Invoke-RestMethod -Uri $projUri -Method GET -Headers $Header -ErrorAction Stop
-		}
-		CATCH{
+		}CATCH{
 			THROW "Failed to get project $Project - $_"
 		}
 		$projectId = $proj.id
@@ -81,15 +78,14 @@ Function Grant-AzDoProjectPermission {
 		Write-Verbose "Retrieving graph groups from $groupsUri"
 		TRY{
 			$allGroups = Invoke-RestMethod -Uri $groupsUri -Method GET -Headers $Header -ErrorAction Stop
-		}
-		CATCH{
+		}CATCH{
 			THROW "Failed retrieving graph groups - $_"
 		}
 
 		# Heuristics to find group descriptor: try exact project-prefixed name, then simple name, then contains.
 		$candidates = @()
 		$projPrefixed = "$Project $Group"
-		FOREACH ($g in $allGroups.value) {
+		ForEach ($g in $allGroups.value) {
 			$candidates += [pscustomobject]@{
 				displayName = $g.displayName
 				descriptor  = $g.descriptor
@@ -105,16 +101,14 @@ Function Grant-AzDoProjectPermission {
 		IF($match) {
 			Write-Verbose "Found group: $($match.displayName) (descriptor: $($match.descriptor))"
 			$groupDescriptor = $match.descriptor
-		}
-		ELSE {
+		}ELSE {
 			Write-Verbose "No graph group matched by heuristics. Will also try project teams."
 			# fallback: try project teams API (teams are also containers for membership in many scenarios)
 			$teamsUri = "$BaseUri$Project/_apis/teams?api-version=7.0"
 			Write-Verbose "Getting project teams: $teamsUri"
 			TRY{
 				$teams = Invoke-RestMethod -Uri $teamsUri -Method GET -Headers $Header -ErrorAction Stop
-			}
-			CATCH{
+			}CATCH{
 				$teams = $null
 			}
 			$teamMatch = $null
@@ -141,8 +135,7 @@ Function Grant-AzDoProjectPermission {
 		$usersUri = "https://vssps.dev.azure.com/$Org/_apis/graph/users?api-version=7.0-preview.1"
 		TRY{
 			$allUsers = Invoke-RestMethod -Uri $usersUri -Method GET -Headers $Header -ErrorAction Stop
-		}
-		CATCH{
+		}CATCH{
 			THROW "Failed retrieving graph users - $_"
 		}
 		$userMatch = $allUsers.value | Where-Object {
@@ -172,8 +165,7 @@ Function Grant-AzDoProjectPermission {
 			$MatchedGroupName = IF($match) { $match.displayName } ELSE { $Group }
 			Write-Output "User '$($userMatch.displayName)' added to group '$MatchedGroupName'."
 			RETURN $res
-		}
-		CATCH{
+		}CATCH{
 			THROW "Failed to add membership - $_"
 		}
 	}

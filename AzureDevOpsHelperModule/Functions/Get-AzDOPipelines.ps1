@@ -46,8 +46,7 @@ Function Get-AzDOPipelines{
 
 			#MarkdownBadge:
 			#$MDUri = $BaseUri + "$Project/_apis/build/status/$PipelineId`?branchName=main&repoName=chuck-dev-uc1-01&api-version=6.0-preview.2"
-		}
-		ELSE{
+		}ELSE{
 			$Uri = $BaseUri + "$Project/_apis/pipelines?api-version=7.0"
 		}
 	}
@@ -62,8 +61,7 @@ Function Get-AzDOPipelines{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 		IF($PipelineId){
 			$Pipelines
-		}
-		ELSE{
+		}ELSE{
 			$Pipelines.Value
 		}
 	}

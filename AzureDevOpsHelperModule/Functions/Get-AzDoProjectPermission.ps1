@@ -90,8 +90,7 @@ Function Get-AzDoProjectPermission{
 		TRY{
 			$Groups = Invoke-RestMethod -Uri $GroupsUri -Method GET -Headers $Header
 			Write-Verbose "Found $($Groups.count) groups in project"
-		}
-		CATCH{
+		}CATCH{
 			Write-Error "Failed to get project groups: $_"
 			RETURN
 		}
@@ -112,8 +111,7 @@ Function Get-AzDoProjectPermission{
 				}
 				Write-Verbose "Found user: $($User.displayName)"
 				$UserDescriptor = $User.descriptor
-			}
-			CATCH{
+			}CATCH{
 				Write-Error "Failed to find user: $_"
 				RETURN
 			}
@@ -124,8 +122,7 @@ Function Get-AzDoProjectPermission{
 
 			TRY{
 				$Memberships = Invoke-RestMethod -Uri $MembershipsUri -Method GET -Headers $Header
-			}
-			CATCH{
+			}CATCH{
 				Write-Error "Failed to get user memberships: $_"
 				RETURN
 			}
@@ -136,7 +133,7 @@ Function Get-AzDoProjectPermission{
 
 			#Build result with group details
 			$Result = @()
-			FOREACH ($Membership in $UserProjectMemberships) {
+			ForEach ($Membership in $UserProjectMemberships) {
 				$MatchingGroup = $Groups.value | Where-Object {$_.descriptor -eq $Membership.containerDescriptor}
 				IF($MatchingGroup) {
 					$Result += [PSCustomObject]@{
@@ -165,15 +162,14 @@ Function Get-AzDoProjectPermission{
 
 			TRY{
 				$Members = Invoke-RestMethod -Uri $MembersUri -Method GET -Headers $Header
-			}
-			CATCH{
+			}CATCH{
 				Write-Error "Failed to get group members: $_"
 				RETURN
 			}
 
 			#Resolve member details
 			$Result = @()
-			FOREACH ($Member in $Members.value) {
+			ForEach ($Member in $Members.value) {
 				$MemberDescriptor = $Member.memberDescriptor
 
 				#Get member details
@@ -186,13 +182,11 @@ Function Get-AzDoProjectPermission{
 				TRY{
 					$MemberDetails = Invoke-RestMethod -Uri $UserUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 					$MemberType = "User"
-				}
-				CATCH{
+				}CATCH{
 					TRY{
 						$MemberDetails = Invoke-RestMethod -Uri $GroupUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 						$MemberType = "Group"
-					}
-					CATCH{
+					}CATCH{
 						$MemberDetails = $null
 						$MemberType = "Unknown"
 					}
@@ -215,7 +209,7 @@ Function Get-AzDoProjectPermission{
 
 			IF($IncludeMembers) {
 				$Result = @()
-				FOREACH ($Group in $Groups.value) {
+				ForEach ($Group in $Groups.value) {
 					Write-Verbose "Getting members for group: $($Group.displayName)"
 
 					#Get group members
@@ -233,9 +227,8 @@ Function Get-AzDoProjectPermission{
 								MemberEmail     = $null
 								MemberType      = $null
 							}
-						}
-						ELSE {
-							FOREACH ($Member in $Members.value) {
+						}ELSE {
+							ForEach ($Member in $Members.value) {
 								$MemberDescriptor = $Member.memberDescriptor
 
 								#Try to get member details
@@ -245,13 +238,11 @@ Function Get-AzDoProjectPermission{
 								TRY{
 									$MemberDetails = Invoke-RestMethod -Uri $UserUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 									$MemberType = "User"
-								}
-								CATCH{
+								}CATCH{
 									TRY{
 										$MemberDetails = Invoke-RestMethod -Uri $GroupUri -Method GET -Headers $Header -ErrorAction SilentlyContinue
 										$MemberType = "Group"
-									}
-									CATCH{
+									}CATCH{
 										$MemberDetails = $null
 										$MemberType = "Unknown"
 									}
@@ -267,8 +258,7 @@ Function Get-AzDoProjectPermission{
 								}
 							}
 						}
-					}
-					CATCH{
+					}CATCH{
 						Write-Warning "Failed to get members for group '$($Group.displayName)': $_"
 						$Result += [PSCustomObject]@{
 							GroupName        = $Group.displayName
@@ -280,8 +270,7 @@ Function Get-AzDoProjectPermission{
 						}
 					}
 				}
-			}
-			ELSE {
+			}ELSE{
 				#Just RETURN the groups without members
 				$Result = $Groups.value | Select-Object @{N='GroupName';E={$_.displayName}},
 					@{N='Description';E={$_.description}},

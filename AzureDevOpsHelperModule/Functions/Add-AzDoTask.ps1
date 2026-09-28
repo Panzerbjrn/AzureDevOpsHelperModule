@@ -79,8 +79,7 @@
 			}
 		)
 
-		IF($Board){$BoardValue = $Board}
-		ELSE {$BoardValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.AreaPath'}
+		IF($Board){$BoardValue = $Board}ELSE {$BoardValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.AreaPath'}
 		$Body += @([pscustomobject]@{
 				op = "add"
 				path = '/fields/System.AreaPath'
@@ -88,8 +87,7 @@
 			}
 		)
 
-		IF($Iteration){{$IterationValue = $Iteration}}
-		ELSE {$IterationValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.IterationPath'}
+		IF($Iteration){{$IterationValue = $Iteration}}ELSE {$IterationValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.IterationPath'}
 		$Body += @([pscustomobject]@{
 				op = "add"
 				path = '/fields/System.IterationPath'

@@ -120,8 +120,7 @@ Function Add-AzDoProjectPermission{
 			}
 			Write-Verbose "Found target group: $($TargetGroup.displayName)"
 			$GroupDescriptor = $TargetGroup.descriptor
-		}
-		CATCH{
+		}CATCH{
 			Write-Error "Failed to get project groups: $_"
 			RETURN
 		}
@@ -142,13 +141,11 @@ Function Add-AzDoProjectPermission{
 				}
 				Write-Verbose "Found user: $($User.displayName)"
 				$MemberDescriptor = $User.descriptor
-			}
-			CATCH{
+			}CATCH{
 				Write-Error "Failed to find user: $_"
 				RETURN
 			}
-		}
-		ELSEIF($GroupName) {
+		}ELSEIF($GroupName) {
 			#Get group descriptor by name
 			$AllGroupsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups?api-version=7.0-preview.1"
 			Write-Verbose "All Groups URI: $AllGroupsUri"
@@ -163,8 +160,7 @@ Function Add-AzDoProjectPermission{
 				}
 				Write-Verbose "Found group: $($SourceGroup.displayName)"
 				$MemberDescriptor = $SourceGroup.descriptor
-			}
-			CATCH{
+			}CATCH{
 				Write-Error "Failed to find group: $_"
 				RETURN
 			}
@@ -176,8 +172,7 @@ Function Add-AzDoProjectPermission{
 
 		TRY{
 			$Result = Invoke-RestMethod -Uri $AddMemberUri -Method PUT -Headers $Header -ContentType $JsonContentType
-		}
-		CATCH{
+		}CATCH{
 			Write-Error "Failed to add membership: $_"
 			RETURN
 		}
@@ -187,8 +182,7 @@ Function Add-AzDoProjectPermission{
 		IF($Result) {
 			IF($UserEmail) {
 				Write-Output "Successfully added '$UserEmail' to '$TargetGroupName' in project '$Project'."
-			}
-			ELSE {
+			}ELSE {
 				Write-Output "Successfully added group '$GroupName' to '$TargetGroupName' in project '$Project'."
 			}
 			$Result

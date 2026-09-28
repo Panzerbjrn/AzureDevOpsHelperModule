@@ -94,8 +94,7 @@ Function Add-AzDOProjectGroup {
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 		IF($Result.displayName -eq $GroupName -or $Result.url) {
 			$Result
-		}
-		else {
+		}ELSE {
 			Write-Output 'Failed to create project group. Response:'
 			Write-Output $Result
 		}

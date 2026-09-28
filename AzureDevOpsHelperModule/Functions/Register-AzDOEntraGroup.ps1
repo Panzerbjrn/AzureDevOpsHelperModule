@@ -62,8 +62,7 @@ Function Register-AzDOEntraGroup {
 
             # Return the materialized group object so it can be used immediately
             $Result
-        }
-        CATCH{
+        }CATCH{
                 THROW "Failed to materialize group. Error: $_"
         }
     }

@@ -58,8 +58,7 @@ Function Get-AzDOEntraGroupDescriptor {
 			Write-Verbose "Found group: $($Group.displayName)"
 			Write-Verbose "Descriptor: $($Group.descriptor)"
 			$Group
-		}
-		else {
+		}ELSE {
 			Write-Error "No group found with Origin ID: $EntraObjectId"
 		}
 	}

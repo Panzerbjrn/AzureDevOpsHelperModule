@@ -31,12 +31,12 @@ Function Get-AzDOPipelineStages {
         [string]$PipelineId
     )
 
-    BEGIN {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
         $Uri = $BaseUri + "$Project/_apis/pipelines/$PipelineId`?api-version=7.0"
     }
 
-    PROCESS {
+    PROCESS{
         Write-Verbose "Processing $($MyInvocation.Mycommand)"
         $PipelineDefinition = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Header -ContentType $JsonContentType
 
@@ -44,7 +44,7 @@ Function Get-AzDOPipelineStages {
         $stages = $PipelineDefinition.stages | Select-Object -ExpandProperty name
     }
 
-    END {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
         $stages
     }

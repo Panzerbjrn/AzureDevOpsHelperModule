@@ -79,7 +79,7 @@
 			}
 		)
 
-		IF ($Board){$BoardValue = $Board}
+		IF($Board){$BoardValue = $Board}
 		ELSE {$BoardValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.AreaPath'}
 		$Body += @([pscustomobject]@{
 				op = "add"
@@ -88,7 +88,7 @@
 			}
 		)
 
-		IF ($Iteration){{$IterationValue = $Iteration}}
+		IF($Iteration){{$IterationValue = $Iteration}}
 		ELSE {$IterationValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.IterationPath'}
 		$Body += @([pscustomobject]@{
 				op = "add"
@@ -104,7 +104,7 @@
 			}
 		)
 
-		# IF ($AssignedTo){$AssignedToValue = $AssignedTo}
+		# IF($AssignedTo){$AssignedToValue = $AssignedTo}
 		# #ELSE {$AssignedToValue = (Get-AzDoUserStoryWorkItem -WorkItemID $ParentItemID -Project $Project).Fields.'System.Assignedto'.displayName}
 		# $Body += @([pscustomobject]@{
 		# 		op = "add"
@@ -117,7 +117,7 @@
 		$Body
 		$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json-patch+json" -Body $Body
 
-		IF (($ParentItemID) -and ($Result.id)){
+		IF(($ParentItemID) -and ($Result.id)){
 			Connect-AzDoItems -Project $Project -ParentItemID $ParentItemID -ChildItemID $Result.id | Out-Null
 		}
 

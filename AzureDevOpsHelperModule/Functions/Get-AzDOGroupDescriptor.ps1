@@ -62,7 +62,7 @@ PROCESS{
     Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
     # If OriginId is provided, use the descriptors endpoint directly
-    if ($PSCmdlet.ParameterSetName -eq 'ByOriginId') {
+    IF($PSCmdlet.ParameterSetName -eq 'ByOriginId') {
         $Uri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/descriptors/$GroupOriginId?api-version=$ApiVersion"
         Write-Verbose "$Uri"
         $Response = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Header
@@ -70,7 +70,7 @@ PROCESS{
     ELSE{
         # Build the scopeDescriptor for the project if provided
         $ScopeDescriptor = $null
-        if ($Project) {
+        IF($Project) {
             Write-Verbose "Getting descriptor for project: $Project"
             $ProjectUri = $BaseUri + "_apis/projects/$([uri]::EscapeDataString($Project))?api-version=7.0"
             $ProjectResponse = Invoke-RestMethod -Uri $ProjectUri -Method GET -Headers $Header
@@ -79,7 +79,7 @@ PROCESS{
         }
 
         # Build base URI for groups
-        if ($ScopeDescriptor) {
+        IF($ScopeDescriptor) {
             $BaseGroupUri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/groups?scopeDescriptor=$ScopeDescriptor&api-version=$ApiVersion"
         }
         ELSE{
@@ -92,7 +92,7 @@ PROCESS{
         $ContinuationToken = $null
 
         do {
-            if ($ContinuationToken) {
+            IF($ContinuationToken) {
                 $Uri = "$BaseGroupUri&continuationToken=$ContinuationToken"
             } else {
                 $Uri = $BaseGroupUri
@@ -109,7 +109,7 @@ PROCESS{
         Write-Verbose "Retrieved $($AllGroups.Count) total groups."
 
         # Filter by name if provided
-        if ($GroupName) {
+        IF($GroupName) {
             $Response = $AllGroups | Where-Object { $_.displayName -eq $GroupName }
         }
         ELSE{

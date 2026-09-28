@@ -59,7 +59,7 @@
 	}
 	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
-		if ($Result.name -eq $RepositoryName) {
+		IF($Result.name -eq $RepositoryName) {
 			#Write-Output "Repository '$($Result.name)' created successfully in project '$Project'."
 			$Result
 		} else {

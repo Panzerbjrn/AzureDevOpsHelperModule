@@ -130,7 +130,7 @@ Function Add-AzDoUserStoryWorkItem{
 			}
 		)
 
-		IF ($AssignedTo){
+		IF($AssignedTo){
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/System.AssignedTo'
@@ -140,7 +140,7 @@ Function Add-AzDoUserStoryWorkItem{
 		}
 
 		#This may need to have project added in front of the iteration. A bit of a ToDo for future enhancement.
-		IF ($Iteration){
+		IF($Iteration){
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/System.IterationPath'
@@ -149,7 +149,7 @@ Function Add-AzDoUserStoryWorkItem{
 			)
 		}
 
-		IF ($Description){
+		IF($Description){
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/System.Description'
@@ -158,7 +158,7 @@ Function Add-AzDoUserStoryWorkItem{
 			)
 		}
 
-		IF ($AcceptanceCriteria){
+		IF($AcceptanceCriteria){
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/Microsoft.VSTS.Common.AcceptanceCriteria'
@@ -167,7 +167,7 @@ Function Add-AzDoUserStoryWorkItem{
 			)
 		}
 
-		IF ($OriginalEstimate){
+		IF($OriginalEstimate){
 			$Body += @([pscustomobject]@{
 					op = "add"
 					path = '/fields/Microsoft.VSTS.Scheduling.OriginalEstimate'
@@ -176,7 +176,7 @@ Function Add-AzDoUserStoryWorkItem{
 			)
 		}
 
-		IF ($Tags){
+		IF($Tags){
 			# ForEach ($Tag in $Tags) {$CombiTag += "$Tag;"}
 			$CombiTag = ($Tags -join ';') + ';'
 			$Body += @([pscustomobject]@{
@@ -187,7 +187,7 @@ Function Add-AzDoUserStoryWorkItem{
 			)
 		}
 
-		IF ($ExtraParameters){
+		IF($ExtraParameters){
 			ForEach ($KV in $ExtraParameters){
 				ForEach ($Key in $KV.Keys){
 					$Body += @([pscustomobject]@{
@@ -213,9 +213,9 @@ Function Add-AzDoUserStoryWorkItem{
 			-StatusCodeVariable StatusCode `
 			-SkipHttpErrorCheck
 
-		IF ($StatusCode -ge 400) {
+		IF($StatusCode -ge 400) {
 			# This should output exactly *what* ADO is expecting but not getting.
-			IF ($Response.customProperties.RuleValidationErrors) {
+			IF($Response.customProperties.RuleValidationErrors) {
 				ForEach ($Rule in $Response.customProperties.RuleValidationErrors) {
 					#Write-Warning "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"
 					Write-Error "Missing/invalid field: $($Rule.fieldReferenceName). Supply it via -ExtraParameters @{ '$($Rule.fieldReferenceName)' = 'value' }"

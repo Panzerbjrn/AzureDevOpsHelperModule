@@ -78,14 +78,14 @@ Function Add-AzDoProjectPermission{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
 		#Validate that either UserEmail or GroupName is specified
-		IF (-not $UserEmail -and -not $GroupName) {
+		IF(-not $UserEmail -and -not $GroupName) {
 			Write-Error "You must specify either a UserEmail or a GroupName."
 			RETURN
 		}
 
 		#Get Project ID
 		$ProjectInfo = Get-AzDOProjects | Where-Object {$_.name -eq $Project}
-		IF (-not $ProjectInfo) {
+		IF(-not $ProjectInfo) {
 			Write-Error "Project '$Project' not found."
 			RETURN
 		}
@@ -114,7 +114,7 @@ Function Add-AzDoProjectPermission{
 			$Groups = Invoke-RestMethod -Uri $GroupsUri -Method GET -Headers $Header
 			$TargetGroup = $Groups.value | Where-Object {$_.displayName -eq $TargetGroupName}
 
-			IF (-not $TargetGroup) {
+			IF(-not $TargetGroup) {
 				Write-Error "Could not find group '$TargetGroupName' in project '$Project'."
 				RETURN
 			}
@@ -127,7 +127,7 @@ Function Add-AzDoProjectPermission{
 		}
 
 		#Resolve the user or group to add
-		IF ($UserEmail) {
+		IF($UserEmail) {
 			#Get user descriptor by email
 			$UserSearchUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/users?api-version=7.0-preview.1"
 			Write-Verbose "User Search URI: $UserSearchUri"
@@ -136,7 +136,7 @@ Function Add-AzDoProjectPermission{
 				$Users = Invoke-RestMethod -Uri $UserSearchUri -Method GET -Headers $Header
 				$User = $Users.value | Where-Object {$_.mailAddress -eq $UserEmail}
 
-				IF (-not $User) {
+				IF(-not $User) {
 					Write-Error "User with email '$UserEmail' not found in organisation."
 					RETURN
 				}
@@ -148,7 +148,7 @@ Function Add-AzDoProjectPermission{
 				RETURN
 			}
 		}
-		ELSEIF ($GroupName) {
+		ELSEIF($GroupName) {
 			#Get group descriptor by name
 			$AllGroupsUri = "https://vssps.dev.azure.com/$Script:Organisation/_apis/graph/groups?api-version=7.0-preview.1"
 			Write-Verbose "All Groups URI: $AllGroupsUri"
@@ -157,7 +157,7 @@ Function Add-AzDoProjectPermission{
 				$AllGroups = Invoke-RestMethod -Uri $AllGroupsUri -Method GET -Headers $Header
 				$SourceGroup = $AllGroups.value | Where-Object {$_.displayName -eq $GroupName}
 
-				IF (-not $SourceGroup) {
+				IF(-not $SourceGroup) {
 					Write-Error "Group '$GroupName' not found in organisation."
 					RETURN
 				}
@@ -184,8 +184,8 @@ Function Add-AzDoProjectPermission{
 	}
 	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
-		IF ($Result) {
-			IF ($UserEmail) {
+		IF($Result) {
+			IF($UserEmail) {
 				Write-Output "Successfully added '$UserEmail' to '$TargetGroupName' in project '$Project'."
 			}
 			ELSE {

@@ -42,7 +42,7 @@ Describe "Add-AzDOProjectGroup" -Tag 'Function' {
 						$Body
 					)
 
-					if ($Method -eq 'GET') {
+					IF($Method -eq 'GET') {
 						return [pscustomobject]@{
 							descriptor = 'scp.test-project-descriptor'
 						}

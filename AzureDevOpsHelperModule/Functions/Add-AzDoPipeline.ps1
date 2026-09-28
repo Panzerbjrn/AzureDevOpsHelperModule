@@ -61,7 +61,7 @@
 		$Uri = $BaseUri + "$Project/_apis/pipelines?api-version=7.0"
 		Write-Verbose "$Uri"
 		#Testing Repo Name or ID exists
-		if (-not $RepositoryId -and -not $RepositoryName) {
+		IF(-not $RepositoryId -and -not $RepositoryName) {
 			Write-Error "You must specify either a RepositoryId or a RepositoryName."
 			RETURN
 		}
@@ -71,7 +71,7 @@
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
 		#Converting repo name to repo ID
-		if (($RepositoryName) -and (-not $RepositoryId)) {
+		IF(($RepositoryName) -and (-not $RepositoryId)) {
 			# Get the repository ID by name
 			$RepositoryId = (Get-AzDORepo -Project $Project -RepoName $RepositoryName).id
 			Write-Verbose "Found Repository ID: $RepositoryId"

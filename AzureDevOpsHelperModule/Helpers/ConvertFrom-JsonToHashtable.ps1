@@ -39,7 +39,7 @@ function ConvertFrom-JsonToHashtable {
 	)
 
 	# Perform a test to determine if the inputobject is null, if it is then RETURN an empty hash table
-	if ([String]::IsNullOrEmpty($InputObject)) {
+	IF([String]::IsNullOrEmpty($InputObject)) {
 		$dict = @{}
 	} else {
 
@@ -50,7 +50,7 @@ function ConvertFrom-JsonToHashtable {
 		$dict = $deserializer.DeserializeObject($InputObject)
 
 		# If the caseinsensitve is false then make the dictionary case insensitive
-		if ($casesensitive -eq $False) {
+		IF($casesensitive -eq $False) {
 			$dict = New-Object "System.Collections.Generic.Dictionary[System.String, System.Object]"($dict, [StringComparer]::OrdinalIgnoreCase)
 		}
 

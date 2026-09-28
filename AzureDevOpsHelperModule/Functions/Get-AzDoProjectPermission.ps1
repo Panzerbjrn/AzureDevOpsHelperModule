@@ -72,7 +72,7 @@ Function Get-AzDoProjectPermission{
 
 		#Get Project ID
 		$ProjectInfo = Get-AzDOProjects | Where-Object {$_.name -eq $Project}
-		IF (-not $ProjectInfo) {
+		IF(-not $ProjectInfo) {
 			Write-Error "Project '$Project' not found."
 			RETURN
 		}
@@ -97,7 +97,7 @@ Function Get-AzDoProjectPermission{
 		}
 
 		#If UserEmail specified, find user's group memberships
-		IF ($UserEmail) {
+		IF($UserEmail) {
 			Write-Verbose "Filtering by user: $UserEmail"
 
 			#Get user descriptor
@@ -106,7 +106,7 @@ Function Get-AzDoProjectPermission{
 				$Users = Invoke-RestMethod -Uri $UserSearchUri -Method GET -Headers $Header
 				$User = $Users.value | Where-Object {$_.mailAddress -eq $UserEmail}
 
-				IF (-not $User) {
+				IF(-not $User) {
 					Write-Error "User with email '$UserEmail' not found in organisation."
 					RETURN
 				}
@@ -138,7 +138,7 @@ Function Get-AzDoProjectPermission{
 			$Result = @()
 			FOREACH ($Membership in $UserProjectMemberships) {
 				$MatchingGroup = $Groups.value | Where-Object {$_.descriptor -eq $Membership.containerDescriptor}
-				IF ($MatchingGroup) {
+				IF($MatchingGroup) {
 					$Result += [PSCustomObject]@{
 						UserEmail    = $UserEmail
 						UserName     = $User.displayName
@@ -150,11 +150,11 @@ Function Get-AzDoProjectPermission{
 			}
 		}
 		#If GroupName specified, get members of that group
-		ELSEIF ($GroupName) {
+		ELSEIF($GroupName) {
 			Write-Verbose "Filtering by group: $GroupName"
 
 			$TargetGroup = $Groups.value | Where-Object {$_.displayName -eq $GroupName}
-			IF (-not $TargetGroup) {
+			IF(-not $TargetGroup) {
 				Write-Error "Group '$GroupName' not found in project '$Project'."
 				RETURN
 			}
@@ -198,7 +198,7 @@ Function Get-AzDoProjectPermission{
 					}
 				}
 
-				IF ($MemberDetails) {
+				IF($MemberDetails) {
 					$Result += [PSCustomObject]@{
 						GroupName       = $GroupName
 						MemberName      = $MemberDetails.displayName
@@ -213,7 +213,7 @@ Function Get-AzDoProjectPermission{
 		ELSE {
 			Write-Verbose "Getting all project groups"
 
-			IF ($IncludeMembers) {
+			IF($IncludeMembers) {
 				$Result = @()
 				FOREACH ($Group in $Groups.value) {
 					Write-Verbose "Getting members for group: $($Group.displayName)"
@@ -224,7 +224,7 @@ Function Get-AzDoProjectPermission{
 					TRY{
 						$Members = Invoke-RestMethod -Uri $MembersUri -Method GET -Headers $Header
 
-						IF ($Members.value.Count -eq 0) {
+						IF($Members.value.Count -eq 0) {
 							$Result += [PSCustomObject]@{
 								GroupName       = $Group.displayName
 								GroupDescription = $Group.description

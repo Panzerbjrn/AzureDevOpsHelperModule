@@ -95,12 +95,12 @@ Function Set-AzDOWorkItem {
 		$updateParams = @('Status','Reason','OriginalEstimate','RemainingWork','CompletedWork','WorkItemTitle','CalculateRemainingWork','AddToCompletedWork','AddTags','ReplaceTags','Tags')
 		$hasUpdate = $False
 		foreach ($Param in $updateParams) {
-			if ($PSBoundParameters.ContainsKey($Param) -and ($PSBoundParameters[$Param] -or $PSBoundParameters[$Param] -is [switch])) {
+			IF($PSBoundParameters.ContainsKey($Param) -and ($PSBoundParameters[$Param] -or $PSBoundParameters[$Param] -is [switch])) {
 			$hasUpdate = $true
 			break
 			}
 		}
-		if (-not $hasUpdate) {
+		IF(-not $hasUpdate) {
 			Write-Error "At least one parameter to update must be specified." -ErrorAction Stop
 			RETURN
 		}
@@ -169,7 +169,7 @@ Function Set-AzDOWorkItem {
 			)
 		}
 		IF($AddTags) {$CurrentTags = ((Get-AzDoUserStoryWorkItem -WorkItemID $WorkItemID).Fields.'System.Tags' -split ';').Trim()}
-		IF ($Tags) {
+		IF($Tags) {
 			$CombiTag = ""
 			ForEach ($Tag in $Tags+$CurrentTags) { $CombiTag += "$Tag;" }
 			$CombiTag = $CombiTag.TrimEnd(';')

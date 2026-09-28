@@ -41,11 +41,11 @@ Function Add-AzDOEntraGroupToProjectGroup {
         [string]$Organisation = $Script:Organisation
     )
 
-    BEGIN {
+    BEGIN{
         $ApiVersion = "7.1-preview.1"
     }
 
-    PROCESS {
+    PROCESS{
         # Endpoint for Group Entitlements (Member Entitlement Management API)
         $Uri = "https://vsaex.dev.azure.com/$Organisation/_apis/groupentitlements?api-version=$ApiVersion"
 

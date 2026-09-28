@@ -41,27 +41,27 @@ Function Grant-AzDoProjectPermission {
 		[switch]$WhatIf
 	)
 
-	BEGIN {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 
-		IF (-not $Header) {
+		IF(-not $Header) {
 			THROW "Authorization header not available. Run Get-AzDoAccessToken first."
 		}
 
-		IF (-not $BaseUri) {
+		IF(-not $BaseUri) {
 			THROW "BaseUri not found. Run Get-AzDoAccessToken first."
 		}
 
 		# Derive organization from BaseUri (assumes format https://dev.azure.com/{org}/ )
 		$Org = $null
-		IF ($BaseUri -match 'https?://dev.azure.com/([^/]+)/?') { $Org = $Matches[1] }
-		ELSEIF ($BaseUri -match 'https?://([^/.]+)\.visualstudio\.com/?') { $Org = $Matches[1] }
+		IF($BaseUri -match 'https?://dev.azure.com/([^/]+)/?') { $Org = $Matches[1] }
+		ELSEIF($BaseUri -match 'https?://([^/.]+)\.visualstudio\.com/?') { $Org = $Matches[1] }
 		ELSE { Write-Verbose "Could not reliably parse organization from BaseUri: $BaseUri" }
 
 		Write-Verbose "Organization determined as: $Org"
 	}
 
-	PROCESS {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
 		# Get project details (to obtain id)
@@ -99,10 +99,10 @@ Function Grant-AzDoProjectPermission {
 		}
 
 		$match = $candidates | Where-Object { $_.displayName -eq $projPrefixed } | Select-Object -First 1
-		IF (-not $match) { $match = $candidates | Where-Object { $_.displayName -eq $Group } | Select-Object -First 1 }
-		IF (-not $match) { $match = $candidates | Where-Object { $_.displayName -match [regex]::Escape($Group) } | Select-Object -First 1 }
+		IF(-not $match) { $match = $candidates | Where-Object { $_.displayName -eq $Group } | Select-Object -First 1 }
+		IF(-not $match) { $match = $candidates | Where-Object { $_.displayName -match [regex]::Escape($Group) } | Select-Object -First 1 }
 
-		IF ($match) {
+		IF($match) {
 			Write-Verbose "Found group: $($match.displayName) (descriptor: $($match.descriptor))"
 			$groupDescriptor = $match.descriptor
 		}
@@ -118,21 +118,21 @@ Function Grant-AzDoProjectPermission {
 				$teams = $null
 			}
 			$teamMatch = $null
-			IF ($teams) {
+			IF($teams) {
 				$teamMatch = $teams.value | Where-Object { $_.name -eq $Group -or $_.name -match [regex]::Escape($Group) } | Select-Object -First 1
 			}
-			IF ($teamMatch) {
+			IF($teamMatch) {
 				Write-Verbose "Found team: $($teamMatch.name) (id: $($teamMatch.id))"
 				# Need to resolve team to graph descriptor by querying graph groups where originId equals team id
 				$groupByOrigin = $candidates | Where-Object { $_.displayName -eq $teamMatch.name -or $_.displayName -match [regex]::Escape($teamMatch.name) } | Select-Object -First 1
-				IF ($groupByOrigin) {
+				IF($groupByOrigin) {
 					$groupDescriptor = $groupByOrigin.descriptor
 					$match = $groupByOrigin
 				}
 			}
 		}
 
-		IF (-not $groupDescriptor) {
+		IF(-not $groupDescriptor) {
 			THROW "Unable to find group or team descriptor for group '$Group' in project '$Project'. Ensure you have rights to read graph groups."
 		}
 
@@ -151,7 +151,7 @@ Function Grant-AzDoProjectPermission {
 			($_.displayName -and ($_.displayName -like "*$User*"))
 		} | Select-Object -First 1
 
-		IF (-not $userMatch) {
+		IF(-not $userMatch) {
 			THROW "Unable to find a graph user matching '$User'. Ensure the user exists in the organization."
 		}
 		Write-Verbose "Found user: $($userMatch.displayName) (descriptor: $($userMatch.descriptor))"
@@ -161,7 +161,7 @@ Function Grant-AzDoProjectPermission {
 		$membershipUri = "https://vssps.dev.azure.com/$Org/_apis/graph/memberships/$userDescriptor/$groupDescriptor`?api-version=7.0-preview.1"
 		Write-Verbose "Membership URI: $membershipUri"
 
-		IF ($WhatIf) {
+		IF($WhatIf) {
 			Write-Output "WhatIf: would create membership: user '$($userMatch.displayName)' -> group '$Group' (descriptor: $groupDescriptor)"
 			RETURN
 		}
@@ -169,7 +169,7 @@ Function Grant-AzDoProjectPermission {
 		Write-Verbose "Creating membership..."
 		TRY{
 			$res = Invoke-RestMethod -Uri $membershipUri -Method PUT -Headers $Header -ErrorAction Stop -ContentType 'application/json' -Body $null
-			$MatchedGroupName = IF ($match) { $match.displayName } ELSE { $Group }
+			$MatchedGroupName = IF($match) { $match.displayName } ELSE { $Group }
 			Write-Output "User '$($userMatch.displayName)' added to group '$MatchedGroupName'."
 			RETURN $res
 		}
@@ -178,7 +178,7 @@ Function Grant-AzDoProjectPermission {
 		}
 	}
 
-	END {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 	}
 }

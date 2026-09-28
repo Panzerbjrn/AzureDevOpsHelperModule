@@ -39,8 +39,8 @@ Function Get-AzDOWorkItemTypes{
 
 	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
-		IF ($PSVersionTable.PSVersion.Major -eq 5){$Result = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header | ConvertFrom-Json}
-        IF ($PSVersionTable.PSVersion.Major -eq 7){$Result = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header | ConvertFrom-Json -AsHashtable}
+		IF($PSVersionTable.PSVersion.Major -eq 5){$Result = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header | ConvertFrom-Json}
+        IF($PSVersionTable.PSVersion.Major -eq 7){$Result = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Header | ConvertFrom-Json -AsHashtable}
 	}
 	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"

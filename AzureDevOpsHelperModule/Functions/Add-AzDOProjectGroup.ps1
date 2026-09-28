@@ -48,24 +48,24 @@ Function Add-AzDOProjectGroup {
 		[string]$Organisation = $Script:Organisation
 	)
 
-	BEGIN {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 		$ApiVersion = '7.1-preview.1'
 	}
 
-	PROCESS {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
-		if (-not $Organisation -and $BaseUri -match '^https://dev\.azure\.com/([^/]+)/') {
+		IF(-not $Organisation -and $BaseUri -match '^https://dev\.azure\.com/([^/]+)/') {
 			$Organisation = $Matches[1]
 		}
 
-		if (-not $Project) {
+		IF(-not $Project) {
 			Write-Error 'You must specify a Project or connect with a default project set.'
 			return
 		}
 
-		if (-not $Organisation) {
+		IF(-not $Organisation) {
 			Write-Error 'You must specify an Organisation or connect with a default organisation set.'
 			return
 		}
@@ -80,7 +80,7 @@ Function Add-AzDOProjectGroup {
 			displayName = $GroupName
 		}
 
-		if ($Description) {
+		IF($Description) {
 			$Body.description = $Description
 		}
 
@@ -90,9 +90,9 @@ Function Add-AzDOProjectGroup {
 		Write-Verbose $Body
 		$Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType 'application/json' -Body $Body
 	}
-	END {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
-		if ($Result.displayName -eq $GroupName -or $Result.url) {
+		IF($Result.displayName -eq $GroupName -or $Result.url) {
 			$Result
 		}
 		else {

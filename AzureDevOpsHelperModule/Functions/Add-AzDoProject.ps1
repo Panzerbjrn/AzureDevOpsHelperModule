@@ -83,7 +83,7 @@ Function Add-AzDoProject{
 	}
 	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
-		if ($Result.name -eq $ProjectName -or $Result.url) {
+		IF($Result.name -eq $ProjectName -or $Result.url) {
 			$Result
 		} else {
 			Write-Output "Failed to create project. Response:"

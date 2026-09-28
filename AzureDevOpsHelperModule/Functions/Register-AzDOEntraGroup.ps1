@@ -35,13 +35,13 @@ Function Register-AzDOEntraGroup {
         [string]$Organisation = $Script:Organisation
     )
 
-    BEGIN {
+    BEGIN{
         Write-Verbose "Beginning $($MyInvocation.Mycommand)"
         # This specific preview API version supports materializing AAD groups
         $ApiVersion = "7.1-preview.1"
     }
 
-    PROCESS {
+    PROCESS{
         Write-Verbose "Materializing Entra group with Origin ID: $EntraObjectId"
 
         # The endpoint for creating (materializing) a group
@@ -55,7 +55,7 @@ Function Register-AzDOEntraGroup {
         Write-Verbose "Calling: $Uri"
         Write-Verbose "Body: $Body"
 
-        try {
+        TRY{
             $Result = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Header -ContentType "application/json" -Body $Body
             Write-Verbose "Successfully materialized group: $($Result.displayName)"
             Write-Verbose "Descriptor: $($Result.descriptor)"
@@ -63,12 +63,12 @@ Function Register-AzDOEntraGroup {
             # Return the materialized group object so it can be used immediately
             $Result
         }
-        catch {
+        CATCH{
                 THROW "Failed to materialize group. Error: $_"
         }
     }
 
-    END {
+    END{
         Write-Verbose "Ending $($MyInvocation.Mycommand)"
     }
 }

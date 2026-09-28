@@ -75,16 +75,16 @@ Function Add-AzDoGroupMember {
 		[string]$Organization = $Script:Organisation
 	)
 
-	BEGIN {
+	BEGIN{
 		Write-Verbose "Beginning $($MyInvocation.Mycommand)"
 		$ApiVersion = "7.1-preview.1"
 	}
 
-	PROCESS {
+	PROCESS{
 		Write-Verbose "Processing $($MyInvocation.Mycommand)"
 
 		# Resolve Member Descriptor if Origin ID is provided
-		if ($PSCmdlet.ParameterSetName -eq 'ByOriginId') {
+		IF($PSCmdlet.ParameterSetName -eq 'ByOriginId') {
 			Write-Verbose "Looking up descriptor for member Origin ID: $MemberOriginId"
 			# Use the Users endpoint with a filter or the Groups endpoint
 			# The Graph API can search by originId using the subjectTypes parameter
@@ -92,14 +92,14 @@ Function Add-AzDoGroupMember {
 			$Groups = Invoke-RestMethod -Uri $MemberUri -Method GET -Headers $Header
 			$Group = $Groups.value | Where-Object { $_.originId -eq $MemberOriginId }
 
-			if (-not $Group) {
+			IF(-not $Group) {
 				# Try as a user instead
 				$MemberUri = "https://vssps.dev.azure.com/$Organization/_apis/graph/users?api-version=$ApiVersion"
 				$Users = Invoke-RestMethod -Uri $MemberUri -Method GET -Headers $Header
 				$Group = $Users.value | Where-Object { $_.originId -eq $MemberOriginId }
 			}
 
-			if (-not $Group) {
+			IF(-not $Group) {
 				Write-Error "Could not find member with Origin ID: $MemberOriginId"
 				RETURN
 			}
@@ -108,13 +108,13 @@ Function Add-AzDoGroupMember {
 		}
 
 		# Resolve Member Descriptor if Principal Name is provided (may not work for mail-disabled groups)
-		if ($PSCmdlet.ParameterSetName -eq 'ByName') {
+		IF($PSCmdlet.ParameterSetName -eq 'ByName') {
 			Write-Verbose "Looking up descriptor for member: $MemberPrincipalName"
 			$MemberUri = "https://vssps.dev.azure.com/$Organization/_apis/graph/users?api-version=$ApiVersion"
 			$Members = Invoke-RestMethod -Uri $MemberUri -Method GET -Headers $Header
 			$Member = $Members.value | Where-Object { $_.principalName -eq $MemberPrincipalName -or $_.displayName -eq $MemberPrincipalName }
 
-			if (-not $Member) {
+			IF(-not $Member) {
 				Write-Error "Could not find member: $MemberPrincipalName"
 				RETURN
 			}
@@ -123,13 +123,13 @@ Function Add-AzDoGroupMember {
 		}
 
 		# Resolve Container Descriptor if not provided
-		if ($PSCmdlet.ParameterSetName -eq 'ByName') {
+		IF($PSCmdlet.ParameterSetName -eq 'ByName') {
 			Write-Verbose "Looking up descriptor for group: $ContainerName in project: $Project"
 			$GroupUri = "https://vssps.dev.azure.com/$Organization/_apis/graph/groups?api-version=$ApiVersion&scopeDescriptor=$Project"
 			$Groups = Invoke-RestMethod -Uri $GroupUri -Method GET -Headers $Header
 			$Group = $Groups.value | Where-Object { $_.displayName -eq $ContainerName }
 
-			if (-not $Group) {
+			IF(-not $Group) {
 				Write-Error "Could not find group: $ContainerName in project: $Project"
 				RETURN
 			}
@@ -146,7 +146,7 @@ Function Add-AzDoGroupMember {
 
 		Write-Verbose "Successfully added member to group."
 	}
-	END {
+	END{
 		Write-Verbose "Ending $($MyInvocation.Mycommand)"
 		$Result
 	}

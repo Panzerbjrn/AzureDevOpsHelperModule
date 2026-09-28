@@ -54,7 +54,7 @@ Function Get-AzDOEntraGroupDescriptor {
 		# Find the group matching the Entra Object ID
 		$Group = $Response.value | Where-Object { $_.originId -eq $EntraObjectId }
 
-		if ($Group) {
+		IF($Group) {
 			Write-Verbose "Found group: $($Group.displayName)"
 			Write-Verbose "Descriptor: $($Group.descriptor)"
 			$Group

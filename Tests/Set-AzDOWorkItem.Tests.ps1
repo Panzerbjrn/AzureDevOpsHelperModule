@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Set-AzDOWorkItem" -Tag 'Function' {
 
@@ -31,6 +31,22 @@ Describe "Set-AzDOWorkItem" -Tag 'Function' {
 			$Command = Get-Command Set-AzDOWorkItem
 			$Command.Parameters.Keys | Should -Contain 'CalculateRemainingWork'
 			$Command.Parameters.Keys | Should -Contain 'AddToCompletedWork'
+		}
+	}
+
+	It "Should patch the requested work item state" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Get-AzDoUserStoryWorkItem { @{ id = 123 } }
+			Mock Invoke-RestMethod { @{ id = 123 } } -ParameterFilter {
+				$Uri -eq 'https://dev.azure.com/TestOrg/TestProject/_apis/wit/workitems/123?api-version=7.0' -and
+				$Method -eq 'PATCH' -and ($Body | ConvertFrom-Json).value -eq 'Active'
+			}
+
+			$result = Set-AzDOWorkItem -Project 'TestProject' -WorkItemID 123 -Status 'Active'
+
+			$result.id | Should -Be 123
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1
 		}
 	}
 }

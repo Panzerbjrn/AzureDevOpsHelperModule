@@ -50,4 +50,17 @@ Describe "Add-AzDoGroupMember" -Tag 'Function' {
 			}
 		}
 	}
+
+	It "Should use an explicit organisation for the membership request" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			Mock Invoke-RestMethod { @{ memberDescriptor = 'aadgp.member' } } -ParameterFilter {
+				$Uri -eq 'https://vssps.dev.azure.com/OtherOrg/_apis/graph/memberships/aadgp.member/vssgp.container?api-version=7.1-preview.1' -and $Method -eq 'PUT'
+			}
+
+			$result = Add-AzDoGroupMember -Organization 'OtherOrg' -MemberDescriptor 'aadgp.member' -ContainerDescriptor 'vssgp.container'
+
+			$result.memberDescriptor | Should -Be 'aadgp.member'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1
+		}
+	}
 }

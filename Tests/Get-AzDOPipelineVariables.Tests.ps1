@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDOPipelineVariables" -Tag 'Function' {
 
@@ -21,6 +21,18 @@ Describe "Get-AzDOPipelineVariables" -Tag 'Function' {
 
 		It "Should have Project parameter" {
 			(Get-Command Get-AzDOPipelineVariables).Parameters.Keys | Should -Contain 'Project'
+		}
+	}
+
+	It "Should return variable names from the pipeline configuration" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Invoke-RestMethod { @{ configuration = @{ variables = [pscustomobject]@{ Branch = 'main'; Environment = 'test' } } } }
+
+			Get-AzDOPipelineVariables -Project 'TestProject' -PipelineId 42 | Should -Be @('Branch', 'Environment')
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter {
+				$Uri -eq 'https://dev.azure.com/TestOrg/TestProject/_apis/pipelines/42?api-version=7.0'
+			}
 		}
 	}
 }

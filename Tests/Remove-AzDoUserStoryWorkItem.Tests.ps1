@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Remove-AzDoUserStoryWorkItem" -Tag 'Function' {
 
@@ -22,6 +22,17 @@ Describe "Remove-AzDoUserStoryWorkItem" -Tag 'Function' {
 		It "Should have SupportsShouldProcess attribute" {
 			$Attr = (Get-Command Remove-AzDoUserStoryWorkItem).ScriptBlock.Attributes.Where({$_.TypeId.Name -eq 'CmdletBindingAttribute'})
 			$Attr.SupportsShouldProcess | Should -Be $true
+		}
+	}
+
+	It "Should not delete a work item under WhatIf" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Invoke-RestMethod { throw 'A delete request was sent' }
+
+			Remove-AzDoUserStoryWorkItem -Project 'TestProject' -WorkItemID 123 -WhatIf
+
+			Should -Invoke Invoke-RestMethod -Exactly -Times 0
 		}
 	}
 }

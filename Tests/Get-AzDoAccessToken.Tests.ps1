@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDoAccessToken" -Tag 'Function' {
 
@@ -26,6 +26,16 @@ Describe "Get-AzDoAccessToken" -Tag 'Function' {
 		It "Should have PAT alias for PersonalAccessToken" {
 			$Param = (Get-Command Get-AzDoAccessToken).Parameters['PersonalAccessToken']
 			$Param.Aliases | Should -Contain 'PAT'
+		}
+	}
+
+	It "Should configure the module for the requested organisation and project" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			Get-AzDoAccessToken -PersonalAccessToken 'test-token' -Organisation 'TestOrg' -Project 'TestProject'
+
+			$Script:BaseUri | Should -Be 'https://dev.azure.com/TestOrg/'
+			$Script:Project | Should -Be 'TestProject'
+			$Script:Header.Authorization | Should -Be ('Basic ' + [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(':test-token')))
 		}
 	}
 }

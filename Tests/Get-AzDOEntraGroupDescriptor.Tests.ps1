@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDOEntraGroupDescriptor" -Tag 'Function' {
 
@@ -21,6 +21,19 @@ Describe "Get-AzDOEntraGroupDescriptor" -Tag 'Function' {
 
 		It "Should have Organisation parameter" {
 			(Get-Command Get-AzDOEntraGroupDescriptor).Parameters.Keys | Should -Contain 'Organisation'
+		}
+	}
+
+	It "Should match the group by Entra origin ID" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			Mock Invoke-RestMethod { @{ value = @(@{ originId = 'other'; descriptor = 'vssgp.other' }, @{ originId = 'target'; descriptor = 'vssgp.target' }) } }
+
+			$result = Get-AzDOEntraGroupDescriptor -Organisation 'TestOrg' -EntraObjectId 'target'
+
+			$result.descriptor | Should -Be 'vssgp.target'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter {
+				$Uri -eq 'https://vssps.dev.azure.com/TestOrg/_apis/graph/groups?api-version=7.1-preview.1'
+			}
 		}
 	}
 }

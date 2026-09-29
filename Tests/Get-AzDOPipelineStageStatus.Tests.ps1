@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDOPipelineStageStatus" -Tag 'Function' {
 
@@ -24,6 +24,20 @@ Describe "Get-AzDOPipelineStageStatus" -Tag 'Function' {
 
 		It "Should have Project parameter" {
 			(Get-Command Get-AzDOPipelineStageStatus).Parameters.Keys | Should -Contain 'Project'
+		}
+	}
+
+	It "Should return stage status for the requested run" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Invoke-RestMethod { @{ value = @(@{ name = 'Build'; state = 'completed' }) } }
+
+			$result = Get-AzDOPipelineStageStatus -Project 'TestProject' -PipelineId 42 -RunID 7
+
+			$result.value[0].state | Should -Be 'completed'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter {
+				$Uri -eq 'https://dev.azure.com/TestOrg/TestProject/_apis/pipelines/42/runs/7/stages?api-version=7.0'
+			}
 		}
 	}
 }

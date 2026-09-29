@@ -68,4 +68,17 @@ Describe "Add-AzDoProject" -Tag 'Function' {
 			}
 		}
 	}
+
+	It "Should use explicitly selected project options" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Invoke-RestMethod { @{ name = 'PublicProject' } } -ParameterFilter {
+				$Method -eq 'POST' -and ($Body | ConvertFrom-Json).visibility -eq 'public' -and
+				($Body | ConvertFrom-Json).capabilities.versioncontrol.sourceControlType -eq 'Tfvc'
+			}
+
+			(Add-AzDoProject -ProjectName 'PublicProject' -Visibility public -SourceControlType Tfvc).name | Should -Be 'PublicProject'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1
+		}
+	}
 }

@@ -73,4 +73,19 @@ Describe "Add-AzDOProjectGroup" -Tag 'Function' {
 			}
 		}
 	}
+
+	It "Should allow a group without a description" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			Mock Invoke-RestMethod { @{ descriptor = 'scp.test' } } -ParameterFilter { $Method -eq 'GET' }
+			Mock Invoke-RestMethod { @{ displayName = 'Readers' } } -ParameterFilter {
+				$Method -eq 'POST' -and $Uri -like '*scopeDescriptor=scp.test*' -and
+				($Body | ConvertFrom-Json).displayName -eq 'Readers' -and
+				-not ($Body | ConvertFrom-Json).PSObject.Properties['description']
+			}
+
+			(Add-AzDOProjectGroup -GroupName 'Readers' -Project 'TestProject' -Organisation 'TestOrg').displayName | Should -Be 'Readers'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter { $Method -eq 'POST' }
+		}
+	}
 }

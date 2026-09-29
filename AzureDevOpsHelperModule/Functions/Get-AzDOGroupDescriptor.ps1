@@ -63,7 +63,7 @@ PROCESS{
 
     # If OriginId is provided, use the descriptors endpoint directly
     IF($PSCmdlet.ParameterSetName -eq 'ByOriginId') {
-        $Uri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/descriptors/$GroupOriginId?api-version=$ApiVersion"
+		$Uri = "https://vssps.dev.azure.com/$Organisation/_apis/graph/descriptors/$GroupOriginId`?api-version=$ApiVersion"
         Write-Verbose "$Uri"
         $Response = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Header
     }ELSE{

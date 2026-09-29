@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDoUserStoryWorkItem" -Tag 'Function' {
 
@@ -26,6 +26,21 @@ Describe "Get-AzDoUserStoryWorkItem" -Tag 'Function' {
 		It "Should have aliases for WorkItemID" {
 			$Param = (Get-Command Get-AzDoUserStoryWorkItem).Parameters['WorkItemID']
 			$Param.Aliases | Should -Contain 'WorkItem'
+		}
+	}
+
+	It "Should return the requested work item" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:BaseUri = 'https://dev.azure.com/TestOrg/'
+			$Script:Header = @{ Authorization = 'Basic test' }
+			Mock Invoke-RestMethod { @{ id = 123 } }
+
+			$result = Get-AzDoUserStoryWorkItem -Project 'TestProject' -WorkItemID 123
+
+			$result.id | Should -Be 123
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter {
+				$Uri -eq 'https://dev.azure.com/TestOrg/TestProject/_apis/wit/workitems/123?api-version=7.0' -and $Method -eq 'get'
+			}
 		}
 	}
 }

@@ -1,7 +1,7 @@
 $ModuleName = 'AzureDevOpsHelperModule'
 $ModuleRoot = Resolve-Path "$PSScriptRoot\..\$ModuleName"
 
-Import-Module -Path $ModuleRoot -ErrorAction Stop
+Import-Module -Name $ModuleRoot -ErrorAction Stop
 
 Describe "Get-AzDOGroupDescriptor" -Tag 'Function' {
 
@@ -24,6 +24,20 @@ Describe "Get-AzDOGroupDescriptor" -Tag 'Function' {
 
 		It "Should have Project parameter" {
 			(Get-Command Get-AzDOGroupDescriptor).Parameters.Keys | Should -Contain 'Project'
+		}
+	}
+
+	It "Should look up a descriptor by group origin ID" {
+		InModuleScope 'AzureDevOpsHelperModule' {
+			$Script:Organisation = 'TestOrg'
+			Mock Invoke-RestMethod { @{ value = 'vssgp.target' } }
+
+			$result = Get-AzDOGroupDescriptor -GroupOriginId 'target'
+
+			$result.value | Should -Be 'vssgp.target'
+			Should -Invoke Invoke-RestMethod -Exactly -Times 1 -ParameterFilter {
+				$Uri -eq 'https://vssps.dev.azure.com/TestOrg/_apis/graph/descriptors/target?api-version=7.1-preview.1'
+			}
 		}
 	}
 }

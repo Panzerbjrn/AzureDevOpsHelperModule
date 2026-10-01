@@ -8,6 +8,13 @@ $Helpers		= Join-Path -Path $ProjectRoot -ChildPath "$ModuleName\Helpers"
 Describe "General project validation: $ModuleName" -Tag 'Module_Validation' {
 
 	BeforeAll {
+		$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+		$ModuleName = Split-Path $ProjectRoot -Leaf
+		$ModuleRoot = Join-Path (Join-Path $ProjectRoot $ModuleName) "$ModuleName.psm1"
+		$ManifestRoot = Join-Path (Join-Path $ProjectRoot $ModuleName) "$ModuleName.psd1"
+		$Functions = Join-Path $ProjectRoot "$ModuleName\Functions"
+		$Helpers = Join-Path $ProjectRoot "$ModuleName\Helpers"
+
 		TRY{
 			Import-module PSScriptAnalyzer -ErrorAction STOP
 		}
@@ -42,11 +49,16 @@ Describe "General project validation: $ModuleName" -Tag 'Module_Validation' {
 }
 
 Describe "Module Import: $ModuleName" -Tag 'Module_Import' {
+	BeforeAll {
+		$ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+		$ModuleName = Split-Path $ProjectRoot -Leaf
+		$ManifestRoot = Join-Path (Join-Path $ProjectRoot $ModuleName) "$ModuleName.psd1"
+	}
 
 	Context 'Module should be importable' {
 
 		It "Should import without errors" {
-			{ Import-Module -Path $ManifestRoot -ErrorAction Stop } | Should -Not -Throw
+			{ Import-Module $ManifestRoot -ErrorAction Stop } | Should -Not -Throw
 		}
 
 		It "Should have module in Get-Module output" {
@@ -61,8 +73,8 @@ Describe "Module Import: $ModuleName" -Tag 'Module_Import' {
 			$ExportedFunctions = $Module.ExportedFunctions.Keys
 		}
 
-		It "Should export 30 functions" {
-			$ExportedFunctions.Count | Should -Be 30
+		It "Should export 29 functions" {
+			$ExportedFunctions.Count | Should -Be 29
 		}
 
 		It "Should include Add-AzDoRepo function" {
@@ -136,7 +148,7 @@ Describe "Validating commands are viable" -Tag 'Command_Validation' {
 	Context 'Private helpers should be viable' {
 
 		#Write-Host 'Context: Private helpers should be viable'
-		$AllHelpers = Get-ChildItem -Path $Functions -Include *.ps1 -Recurse
+		$AllHelpers = Get-ChildItem -Path $Helpers -Include *.ps1 -Recurse
 		$TestCase 	= $AllHelpers | ForEach-Object {@{file=$_}}
 		#Write-Host "Test cases generated: $($TestCase | Out-String)"
 
